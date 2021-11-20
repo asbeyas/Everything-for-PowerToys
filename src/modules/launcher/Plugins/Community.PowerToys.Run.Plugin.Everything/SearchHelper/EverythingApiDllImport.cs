@@ -29,6 +29,9 @@ namespace Community.PowerToys.Run.Plugin.Everything.SearchHelper
 
         [DllImport(DllPath)]
         internal static extern void Everything_SetOffset(int dwOffset);
+        
+        [DllImport(DllPath)]
+        internal static extern void Everything_SetSort(int dwSort);
 
         [DllImport(DllPath)]
         internal static extern bool Everything_GetMatchPath();
