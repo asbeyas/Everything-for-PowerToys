@@ -137,6 +137,8 @@ namespace Community.PowerToys.Run.Plugin.Everything.SearchHelper
             if (token.IsCancellationRequested) { return results; }
             EverythingApiDllImport.Everything_SetOffset(0);
             if (token.IsCancellationRequested) { return results; }
+            EverythingApiDllImport.Everything_SetSort(14);
+            if (token.IsCancellationRequested) { return results; }
             EverythingApiDllImport.Everything_SetMax(maxCount);
             if (token.IsCancellationRequested) { return results; }
             EverythingApiDllImport.Everything_SetSearchW(keyWord);
