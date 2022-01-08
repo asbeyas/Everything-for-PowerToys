@@ -137,13 +137,8 @@ namespace Community.PowerToys.Run.Plugin.Everything.SearchHelper
             EverythingApiDllImport.Everything_SetRequestFlags(RequestFlag.HighlightedFileName | RequestFlag.HighlightedFullPathAndFileName);
             if (token.IsCancellationRequested) { return results; }
             EverythingApiDllImport.Everything_SetOffset(0);
-
-            if (dateModifiedDescending)
-            {
-                if (token.IsCancellationRequested) { return results; }
-                EverythingApiDllImport.Everything_SetSort(14);
-            }
-
+            if (token.IsCancellationRequested) { return results; }
+            EverythingApiDllImport.Everything_SetSort(dateModifiedDescending ? 14: 0);
             if (token.IsCancellationRequested) { return results; }
             EverythingApiDllImport.Everything_SetMax(maxCount);
             if (token.IsCancellationRequested) { return results; }
