@@ -11,6 +11,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using Community.PowerToys.Run.Plugin.Everything.Exception;
+using Community.PowerToys.Run.Plugin.Everything.Properties;
 using Community.PowerToys.Run.Plugin.Everything.SearchHelper;
 using ManagedCommon;
 using Microsoft.PowerToys.Settings.UI.Library;
@@ -23,16 +24,26 @@ namespace Community.PowerToys.Run.Plugin.Everything
 {
     public class Main : ISettingProvider, IPlugin, ISavable, IPluginI18n, IContextMenu, IDisposable, IDelayedExecutionPlugin
     {
+        private const string DateModifiedDescending = nameof(DateModifiedDescending);
         private PluginJsonStorage<EverythingSettings> _storage;
         private PluginInitContext _context;
         private EverythingSettings _settings;
         private IContextMenu _contextMenuLoader;
         private bool disposedValue;
+        private bool _dateModifiedDescending;
         private readonly EverythingApi _api = new EverythingApi();
 
         private string WarningIconPath { get; set; }
 
-        public IEnumerable<PluginAdditionalOption> AdditionalOptions => new List<PluginAdditionalOption>();
+        public IEnumerable<PluginAdditionalOption> AdditionalOptions => new List<PluginAdditionalOption>()
+        {
+            new PluginAdditionalOption()
+            {
+                Key = DateModifiedDescending,
+                DisplayLabel = Resources.date_modified_descending,
+                Value = false,
+            },
+        };
 
         public string Name => Properties.Resources.Community_plugin_everything_plugin_name;
 
@@ -123,7 +134,7 @@ namespace Community.PowerToys.Run.Plugin.Everything
                 }
                 try
                 {
-                    var searchList = _api.Search(searchQuery, token, _settings.MaxSearchCount);
+                    var searchList = _api.Search(searchQuery, token, _settings.MaxSearchCount, _dateModifiedDescending);
                     for (int i = 0; i < searchList.Count; i++)
                     {
                         if (token.IsCancellationRequested) { return results; }
@@ -211,7 +222,14 @@ namespace Community.PowerToys.Run.Plugin.Everything
 
         public void UpdateSettings(PowerLauncherPluginSettings settings)
         {
-            // nothing to do
+            var dateModifiedDescending = false;
+
+            if (settings != null && settings.AdditionalOptions != null)
+            {
+                dateModifiedDescending = settings.AdditionalOptions.FirstOrDefault(x => x.Key == DateModifiedDescending)?.Value ?? false;
+            }
+
+            _dateModifiedDescending = dateModifiedDescending;
         }
     }
 }

@@ -159,4 +159,7 @@
   <data name="Community_plugin_everything_subtitle_header" xml:space="preserve">
     <value>Everything</value>
   </data>
+  <data name="date_modified_descending" xml:space="preserve">
+    <value>Sort results by DateModifiedDescending</value>
+  </data>
 </root>

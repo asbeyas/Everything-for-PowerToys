@@ -111,8 +111,9 @@ namespace Community.PowerToys.Run.Plugin.Everything.SearchHelper
         /// <param name="token">when cancelled the current search will stop and exit (and would not reset)</param>
         /// <param name="offset">The offset.</param>
         /// <param name="maxCount">The max count.</param>
+        /// <param name="dateModifiedDescending">Sort results by dateModifiedDescending</param>
         /// <returns></returns>
-        public List<SearchResult> Search(string keyWord, CancellationToken token, int maxCount)
+        public List<SearchResult> Search(string keyWord, CancellationToken token, int maxCount, bool dateModifiedDescending)
         {
             var results = new List<SearchResult>();
 
@@ -136,8 +137,13 @@ namespace Community.PowerToys.Run.Plugin.Everything.SearchHelper
             EverythingApiDllImport.Everything_SetRequestFlags(RequestFlag.HighlightedFileName | RequestFlag.HighlightedFullPathAndFileName);
             if (token.IsCancellationRequested) { return results; }
             EverythingApiDllImport.Everything_SetOffset(0);
-            if (token.IsCancellationRequested) { return results; }
-            EverythingApiDllImport.Everything_SetSort(14);
+
+            if (dateModifiedDescending)
+            {
+                if (token.IsCancellationRequested) { return results; }
+                EverythingApiDllImport.Everything_SetSort(14);
+            }
+
             if (token.IsCancellationRequested) { return results; }
             EverythingApiDllImport.Everything_SetMax(maxCount);
             if (token.IsCancellationRequested) { return results; }
