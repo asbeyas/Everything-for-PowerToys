@@ -6,11 +6,13 @@ using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using ColorPicker.Helpers;
+using ModernWpf.Controls;
 using ModernWpf.Controls.Primitives;
 
 namespace ColorPicker.Controls
@@ -39,6 +41,11 @@ namespace ColorPicker.Controls
             InitializeComponent();
 
             UpdateHueGradient(1, 1);
+        }
+
+        protected override AutomationPeer OnCreateAutomationPeer()
+        {
+            return new ColorPickerAutomationPeer(this);
         }
 
         public Color SelectedColor
@@ -159,7 +166,8 @@ namespace ColorPicker.Controls
         {
             if (!_ignoreHexChanges)
             {
-                HexCode.Text = ColorToHex(currentColor);
+                // Second parameter is set to keep the hashtag if typed by the user before
+                HexCode.Text = ColorToHex(currentColor, HexCode.Text);
             }
 
             if (!_ignoreRGBChanges)
@@ -184,13 +192,7 @@ namespace ColorPicker.Controls
             {
                 _isCollapsed = false;
 
-                var opacityAppear = new DoubleAnimation(1.0, new Duration(TimeSpan.FromMilliseconds(300)));
-                opacityAppear.EasingFunction = new QuadraticEase() { EasingMode = EasingMode.EaseInOut };
-
-                var resize = new DoubleAnimation(400, new Duration(TimeSpan.FromMilliseconds(300)));
-                resize.EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseInOut };
-
-                var resizeColor = new DoubleAnimation(309, new Duration(TimeSpan.FromMilliseconds(250)));
+                var resizeColor = new DoubleAnimation(349, new Duration(TimeSpan.FromMilliseconds(250)));
                 resizeColor.EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseInOut };
 
                 var moveColor = new ThicknessAnimation(new Thickness(0), new Duration(TimeSpan.FromMilliseconds(250)));
@@ -210,16 +212,10 @@ namespace ColorPicker.Controls
             {
                 _isCollapsed = true;
 
-                var opacityAppear = new DoubleAnimation(0, new Duration(TimeSpan.FromMilliseconds(150)));
-                opacityAppear.EasingFunction = new QuadraticEase() { EasingMode = EasingMode.EaseInOut };
-
-                var resize = new DoubleAnimation(0, new Duration(TimeSpan.FromMilliseconds(150)));
-                resize.EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseInOut };
-
                 var resizeColor = new DoubleAnimation(165, new Duration(TimeSpan.FromMilliseconds(150)));
                 resizeColor.EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseInOut };
 
-                var moveColor = new ThicknessAnimation(new Thickness(72, 0, 0, 0), new Duration(TimeSpan.FromMilliseconds(150)));
+                var moveColor = new ThicknessAnimation(new Thickness(92, 0, 0, 0), new Duration(TimeSpan.FromMilliseconds(150)));
                 moveColor.EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseInOut };
 
                 ControlHelper.SetCornerRadius(CurrentColorButton, new CornerRadius(0));
@@ -242,12 +238,22 @@ namespace ColorPicker.Controls
 #pragma warning restore CA1801 // Review unused parameters
         {
             HideDetails();
+            AppStateHandler.BlockEscapeKeyClosingColorPickerEditor = false;
 
             // Revert to original color
             var originalColorBackground = new SolidColorBrush(_originalColor);
             CurrentColorButton.Background = originalColorBackground;
 
             HexCode.Text = ColorToHex(_originalColor);
+        }
+
+#pragma warning disable CA1822 // Mark members as static
+#pragma warning disable CA1801 // Review unused parameters
+        private void DetailsFlyout_Opened(object sender, object e)
+#pragma warning restore CA1801 // Review unused parameters
+#pragma warning restore CA1822 // Mark members as static
+        {
+            AppStateHandler.BlockEscapeKeyClosingColorPickerEditor = true;
         }
 
         private void ColorVariationButton_Click(object sender, RoutedEventArgs e)
@@ -281,28 +287,12 @@ namespace ColorPicker.Controls
             _ignoreGradientsChanges = false;
         }
 
-        private static Point GetMousePositionWithinGrid(Border border)
-        {
-            var pos = System.Windows.Input.Mouse.GetPosition(border);
-            if (pos.X < 0)
-            {
-                pos.X = 0;
-            }
-
-            if (pos.X > border.Width)
-            {
-                pos.X = border.Width;
-            }
-
-            return pos;
-        }
-
         private void HexCode_TextChanged(object sender, TextChangedEventArgs e)
         {
             var newValue = (sender as TextBox).Text;
 
-            // support hex with 3 and 6 characters
-            var reg = new Regex("^#([0-9A-F]{3}){1,2}$");
+            // support hex with 3 and 6 characters and optional with hashtag
+            var reg = new Regex("^#?([0-9A-Fa-f]{3}){1,2}$");
 
             if (!reg.IsMatch(newValue))
             {
@@ -313,25 +303,11 @@ namespace ColorPicker.Controls
             {
                 var converter = new System.Drawing.ColorConverter();
 
-                var color = (System.Drawing.Color)converter.ConvertFromString(HexCode.Text);
+                // "FormatHexColorString()" is needed to add hashtag if missing and to convert the hex code from three to six characters. Without this we get format exceptions and incorrect color values.
+                var color = (System.Drawing.Color)converter.ConvertFromString(FormatHexColorString(HexCode.Text));
                 _ignoreHexChanges = true;
                 SetColorFromTextBoxes(color);
                 _ignoreHexChanges = false;
-            }
-        }
-
-#pragma warning disable CA1801 // Review unused parameters
-        private void RGBNumberBox_ValueChanged(ModernWpf.Controls.NumberBox sender, ModernWpf.Controls.NumberBoxValueChangedEventArgs args)
-#pragma warning restore CA1801 // Review unused parameters
-        {
-            if (!_ignoreRGBChanges)
-            {
-                var r = byte.Parse(RNumberBox.Text, CultureInfo.InvariantCulture);
-                var g = byte.Parse(GNumberBox.Text, CultureInfo.InvariantCulture);
-                var b = byte.Parse(BNumberBox.Text, CultureInfo.InvariantCulture);
-                _ignoreRGBChanges = true;
-                SetColorFromTextBoxes(System.Drawing.Color.FromArgb(r, g, b));
-                _ignoreRGBChanges = false;
             }
         }
 
@@ -352,14 +328,115 @@ namespace ColorPicker.Controls
             UpdateTextBoxesAndCurrentColor(Color.FromRgb(color.R, color.G, color.B));
         }
 
-        private static string ColorToHex(Color color)
+        private static string ColorToHex(Color color, string oldValue = "")
         {
-            return "#" + BitConverter.ToString(new byte[] { color.R, color.G, color.B }).Replace("-", string.Empty, StringComparison.InvariantCulture);
+            string newHexString = BitConverter.ToString(new byte[] { color.R, color.G, color.B }).Replace("-", string.Empty, StringComparison.InvariantCulture);
+
+#pragma warning disable CA1308 // Normalize strings to uppercase - Supressed because we want to show hex value in lower case on all places
+            newHexString = newHexString.ToLowerInvariant();
+#pragma warning restore CA1308 // Normalize strings to uppercase
+
+            // Return only with hashtag if user typed it before
+            bool addHashtag = oldValue.StartsWith("#", StringComparison.InvariantCulture);
+            return addHashtag ? "#" + newHexString : newHexString;
+        }
+
+        /// <summary>
+        /// Formats the hex code string to be accepted by <see cref="ConvertFromString()"/> of <see cref="ColorConverter.ColorConverter"/>. We are adding hashtag at the beginning if needed and convert from three characters to six characters code.
+        /// </summary>
+        /// <param name="hexCodeText">The string we read from the hex text box.</param>
+        /// <returns>Formatted string with hashtag and six characters of hex code.</returns>
+        private static string FormatHexColorString(string hexCodeText)
+        {
+            if (hexCodeText.Length == 3 || hexCodeText.Length == 4)
+            {
+                // Hex with or without hashtag and three characters
+                return Regex.Replace(hexCodeText, "^#?([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])$", "#$1$1$2$2$3$3");
+            }
+            else
+            {
+                // Hex with or without hashtag and six characters
+                return hexCodeText.StartsWith("#", StringComparison.InvariantCulture) ? hexCodeText : "#" + hexCodeText;
+            }
         }
 
         private void HexCode_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
             (sender as System.Windows.Controls.TextBox).SelectAll();
+        }
+
+        private void RGBNumberBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!_ignoreRGBChanges)
+            {
+                var numberBox = sender as NumberBox;
+                var r = numberBox.Name == "RNumberBox" ? GetValueFromNumberBox(numberBox) : (byte)RNumberBox.Value;
+                var g = numberBox.Name == "GNumberBox" ? GetValueFromNumberBox(numberBox) : (byte)GNumberBox.Value;
+                var b = numberBox.Name == "BNumberBox" ? GetValueFromNumberBox(numberBox) : (byte)BNumberBox.Value;
+                _ignoreRGBChanges = true;
+                SetColorFromTextBoxes(System.Drawing.Color.FromArgb(r, g, b));
+                _ignoreRGBChanges = false;
+            }
+        }
+
+        /// <summary>
+        /// NumberBox provides value only after it has been validated - happens after pressing enter or leaving this control.
+        /// However, we need to get value immediately after the underlying textbox value changes
+        /// </summary>
+        /// <param name="numberBox">numberBox control which value we want to get</param>
+        /// <returns>Validated value as per numberbox conditions, if content is invalid it returns previous value</returns>
+        private static byte GetValueFromNumberBox(NumberBox numberBox)
+        {
+            var internalTextBox = GetChildOfType<TextBox>(numberBox);
+            var parsedValue = numberBox.NumberFormatter.ParseDouble(internalTextBox.Text);
+            if (parsedValue != null)
+            {
+                var parsedValueByte = (byte)parsedValue;
+                if (parsedValueByte >= numberBox.Minimum && parsedValueByte <= numberBox.Maximum)
+                {
+                    return parsedValueByte;
+                }
+            }
+
+            // not valid input, return previous value
+            return (byte)numberBox.Value;
+        }
+
+        public static T GetChildOfType<T>(DependencyObject depObj)
+            where T : DependencyObject
+        {
+            if (depObj == null)
+            {
+                return null;
+            }
+
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+            {
+                var child = VisualTreeHelper.GetChild(depObj, i);
+
+                var result = (child as T) ?? GetChildOfType<T>(child);
+                if (result != null)
+                {
+                    return result;
+                }
+            }
+
+            return null;
+        }
+    }
+
+#pragma warning disable SA1402 // File may only contain a single type
+    public class ColorPickerAutomationPeer : UserControlAutomationPeer
+#pragma warning restore SA1402 // File may only contain a single type
+    {
+        public ColorPickerAutomationPeer(ColorPickerControl owner)
+            : base(owner)
+        {
+        }
+
+        protected override string GetLocalizedControlTypeCore()
+        {
+            return ColorPicker.Properties.Resources.Color_Picker_Control;
         }
     }
 }

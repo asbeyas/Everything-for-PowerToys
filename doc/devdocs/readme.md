@@ -33,31 +33,6 @@ Once you've discussed your proposed feature/fix/etc. with a team member, and you
   - don't close the issue if it's a bug in the current released version since users tend to not search for closed issues, we will close the resolved issues when a new version is released.
   - if it's not a code fix that effects the end user, the issue can be closed (for example a fix in the build or a code refactoring and so on).
 
-
-## Repository Overview
-
-General project organization:
-
-### The [`doc`](/doc) folder
-
-Documentation for the project.
-
-### The [`Wiki`](https://github.com/microsoft/PowerToys/wiki)
-
-The Wiki contains the current specs for the project.
-
-### The [`installer`](/installer) folder
-
-Contains the source code of the PowerToys installer.
-
-### The [`src`](/src) folder
-
-Contains the source code of the PowerToys runner and of all of the PowerToys modules. **This is where most of the magic happens.**
-
-### The [`tools`](/tools) folder
-
-Various tools used by PowerToys. Includes the Visual Studio 2019 project template for new PowerToys.
-
 ## Compiling PowerToys
 
 ### Prerequisites for Compiling PowerToys
@@ -66,10 +41,12 @@ Various tools used by PowerToys. Includes the Visual Studio 2019 project templat
 2. Visual Studio Community/Professional/Enterprise 2019
 3. Once you've cloned and started the `PowerToys.sln`, in the solution explorer, if you see a dialog that says `install extra components`, click `install`
 
-**Optional step:**<br/>
-4. to build the Video Conference module, install the [WDK version 1903](https://docs.microsoft.com/en-us/windows-hardware/drivers/other-wdk-downloads) ([direct download link](https://go.microsoft.com/fwlink/?linkid=2085767))<br />
-   During the installation, make sure that, when prompted, the `Install Windows Driver Kit Visual Studio extension` option is checked.
+### Get Submodules to compile
+We have submodules that need to be initialized before you can compile most parts of PowerToys.  This should be a one time step.
 
+1. Open a terminal
+2. Navigate to the folder you cloned PowerToys to.
+3. Run `git submodule update --init --recursive`
 
 ### Compiling Source Code
 
@@ -87,35 +64,33 @@ The installer can only be compiled in `Release` mode, step 1 and 2 must be done 
 
 1. Compile `PowerToys.sln`. Instructions are listed above.
 2. Compile `BugReportTool.sln` tool. Path from root: `tools\BugReportTool\BugReportTool.sln` (details listed below)
-3. Compile `PowerToysSetup.sln` Path from root: `installer\PowerToysSetup.sln` (details listed below)
-4. Compile `PowerToysBootstrapper.sln` Path from root: `installer\PowerToysBootstrapper\PowerToysBootstrapper.sln` (details listed below)
+3. Compile `WebcamReportTool.sln` tool. Path from root: `tools\WebcamReportTool\WebcamReportTool.sln` (details listed below)
+4. Compile `PowerToysSetup.sln` Path from root: `installer\PowerToysSetup.sln` (details listed below)
 
 ### Prerequisites for building the MSI installer
 
-1. Install the [WiX Toolset Visual Studio 2019 Extension](https://marketplace.visualstudio.com/items?itemName=RobMensching.WiXToolset).
+1. Install the [WiX Toolset Visual Studio 2019 Extension](https://marketplace.visualstudio.com/items?itemName=WixToolset.WixToolsetVisualStudio2019Extension).
 2. Install the [WiX Toolset build tools](https://wixtoolset.org/releases/).
 
 ### Locally compiling the Bug reporting tool
 
 1. Open `tools\BugReportTool\BugReportTool.sln`
-1. In Visual Studio, in the `Solutions Configuration` drop-down menu select `Release`
-2. From the `Build` menu, choose `Build Solution`.
+2. In Visual Studio, in the `Solutions Configuration` drop-down menu select `Release`
+3. From the `Build` menu, choose `Build Solution`.
 
-### Locally compiling the .MSI installer
+### Locally compiling the Webcam reporting tool
+
+1. Open `tools\WebcamReportTool\WebcamReportTool.sln`
+2. In Visual Studio, in the `Solutions Configuration` drop-down menu select `Release`
+3. From the `Build` menu, choose `Build Solution`.
+
+### Locally compiling the installer
 
 1. Open `installer\PowerToysSetup.sln`
 2. In Visual Studio, in the `Solutions Configuration` drop-down menu select `Release`
 3. From the `Build` menu choose `Build Solution`.
 
 The resulting `PowerToysSetup.msi` installer will be available in the `installer\PowerToysSetup\x64\Release\` folder.
-
-### Locally compiling the .EXE Bootstrapper installer
-
-1. Open `installer\PowerToysBootstrapper\PowerToysBootstrapper.sln` 
-2. In Visual Studio, in the `Solutions Configuration` drop-down menu select `Release`
-3. From the `Build` menu choose `Build Solution`.
-
-The `PowerToysSetup-0.0.1-x64.exe` binary is created in the `installer\PowerToysBootstrapper\x64\Release\` folder.
 
 #### Supported arguments for the .EXE Bootstrapper installer
 
@@ -159,29 +134,6 @@ Definition of the interface used by the [`runner`](/src/runner) to manage the Po
 
 The common lib, as the name suggests, contains code shared by multiple PowerToys components and modules, e.g. [json parsing](/src/common/json.h) and [IPC primitives](/src/common/two_way_pipe_message_ipc.h).
 
-### [`Settings`](settings.md)
+### [`Settings`](settingsv2/)
 
-WebView project for editing the PowerToys settings.
-
-The html portion of the project that is shown in the WebView is contained in [`settings-html`](/src/settings/settings-html).
-Instructions on how build a new version and update this project are in the [Web project for the Settings UI](./settings-web.md).
-
-While developing, it's possible to connect the WebView to the development server running in localhost by setting the `_DEBUG_WITH_LOCALHOST` flag to `1` and following the instructions near it in `./main.cpp`.
-
-### [`Settings-web`](settings-web.md)
-This project generates the web UI shown in the [PowerToys Settings](/src/editor).
-It's a `ReactJS` project created using [Fluent UI](https://developer.microsoft.com/en-us/fluentui#/).
-
-#### Options
-
-This module has a setting to serve as an example for each of the currently implemented settings property:
-
-- BoolToggle property
-- IntSpinner property
-- String property
-- ColorPicker property
-- CustomAction property
-
-![Image of the Options](/doc/images/settings/example_settings.png)
-
-[installerArgWiki]: https://github.com/microsoft/PowerToys/wiki/Installer-arguments-for-exe
+Settings v2 is our current settings implementation.  Please head over to the dev docs that goes into the current settings system.

@@ -1,4 +1,8 @@
-﻿using Community.PowerToys.Run.Plugin.VSCodeWorkspaces.Properties;
+﻿// Copyright (c) Microsoft Corporation
+// The Microsoft Corporation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using Community.PowerToys.Run.Plugin.VSCodeWorkspaces.Properties;
 using Community.PowerToys.Run.Plugin.VSCodeWorkspaces.VSCodeHelper;
 
 namespace Community.PowerToys.Run.Plugin.VSCodeWorkspaces.WorkspacesHelper
@@ -13,31 +17,41 @@ namespace Community.PowerToys.Run.Plugin.VSCodeWorkspaces.WorkspacesHelper
 
         public string ExtraInfo { get; set; }
 
-        public TypeWorkspace TypeWorkspace { get; set; }
+        public WorkspaceEnvironment WorkspaceEnvironment { get; set; }
+
+        public WorkspaceType WorkspaceType { get; set; }
 
         public VSCodeInstance VSCodeInstance { get; set; }
 
-        public string WorkspaceTypeToString()
+        public string WorkspaceEnvironmentToString()
         {
-            switch (TypeWorkspace)
+            switch (WorkspaceEnvironment)
             {
-                case TypeWorkspace.Local: return Resources.TypeWorkspaceLocal;
-                case TypeWorkspace.Codespaces: return "Codespaces";
-                case TypeWorkspace.RemoteContainers: return Resources.TypeWorkspaceContainer;
-                case TypeWorkspace.RemoteSSH: return "SSH";
-                case TypeWorkspace.RemoteWSL: return "WSL";
+                case WorkspaceEnvironment.Local: return Resources.TypeWorkspaceLocal;
+                case WorkspaceEnvironment.Codespaces: return "Codespaces";
+                case WorkspaceEnvironment.RemoteContainers: return Resources.TypeWorkspaceContainer;
+                case WorkspaceEnvironment.RemoteSSH: return "SSH";
+                case WorkspaceEnvironment.RemoteWSL: return "WSL";
+                case WorkspaceEnvironment.DevContainer: return Resources.TypeWorkspaceDevContainer;
             }
 
             return string.Empty;
         }
     }
 
-    public enum TypeWorkspace
+    public enum WorkspaceEnvironment
     {
         Local = 1,
         Codespaces = 2,
         RemoteWSL = 3,
         RemoteSSH = 4,
-        RemoteContainers = 5
+        RemoteContainers = 5,
+        DevContainer = 6,
+    }
+
+    public enum WorkspaceType
+    {
+        ProjectFolder = 1,
+        WorkspaceFile = 2,
     }
 }

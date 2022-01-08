@@ -171,6 +171,10 @@ public
             return gcnew String(CommonSharedConstants::POWER_LAUNCHER_SHARED_EVENT);
         }
 
+        static String ^ PowerLauncherCentralizedHookSharedEvent() {
+            return gcnew String(CommonSharedConstants::POWER_LAUNCHER_CENTRALIZED_HOOK_SHARED_EVENT);
+        }
+
         static String ^ RunSendSettingsTelemetryEvent() {
             return gcnew String(CommonSharedConstants::RUN_SEND_SETTINGS_TELEMETRY_EVENT);
         }
@@ -179,12 +183,20 @@ public
             return gcnew String(CommonSharedConstants::RUN_EXIT_EVENT);
         }
 
+        static String ^ FZEExitEvent() {
+            return gcnew String(CommonSharedConstants::FZE_EXIT_EVENT);
+        }
+
         static String ^ ColorPickerSendSettingsTelemetryEvent() {
             return gcnew String(CommonSharedConstants::COLOR_PICKER_SEND_SETTINGS_TELEMETRY_EVENT);
         }
 
         static String ^ ShowColorPickerSharedEvent() {
             return gcnew String(CommonSharedConstants::SHOW_COLOR_PICKER_SHARED_EVENT);
+        }
+
+        static String ^ AwakeExitEvent() {
+            return gcnew String(CommonSharedConstants::AWAKE_EXIT_EVENT);
         }
     };
 }

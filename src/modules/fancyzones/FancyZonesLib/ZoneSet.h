@@ -14,7 +14,7 @@ namespace FancyZonesDataTypes
 interface __declspec(uuid("{E4839EB7-669D-49CF-84A9-71A2DFD851A3}")) IZoneSet : public IUnknown
 {
     // Mapping zone id to zone
-    using ZonesMap = std::map<size_t, winrt::com_ptr<IZone>>;
+    using ZonesMap = std::map<ZoneIndex, winrt::com_ptr<IZone>>;
 
     /**
      * @returns Unique identifier of zone layout.
@@ -36,15 +36,14 @@ interface __declspec(uuid("{E4839EB7-669D-49CF-84A9-71A2DFD851A3}")) IZoneSet : 
      * @param   pt Cursor coordinates.
      * @returns Vector of indices, corresponding to the current set of zones - the zones considered active.
      */
-    IFACEMETHOD_(std::vector<size_t>, ZonesFromPoint)(POINT pt) const = 0;
+    IFACEMETHOD_(ZoneIndexSet, ZonesFromPoint)(POINT pt) const = 0;
     /**
      * Get index set of the zones to which the window was assigned.
      *
      * @param   window Handle of the window.
-     * @returns A vector of size_t, 0-based index set.
+     * @returns A vector of ZoneIndex, 0-based index set.
      */
-    IFACEMETHOD_(std::vector<size_t>, GetZoneIndexSetFromWindow)
-    (HWND window) const = 0;
+    IFACEMETHOD_(ZoneIndexSet, GetZoneIndexSetFromWindow)(HWND window) const = 0;
     /**
      * @returns Array of zone objects (defining coordinates of the zone) inside this zone layout.
      */
@@ -57,8 +56,7 @@ interface __declspec(uuid("{E4839EB7-669D-49CF-84A9-71A2DFD851A3}")) IZoneSet : 
      *                         current monitor desktop work area.
      * @param   index          Zone index within zone layout.
      */
-    IFACEMETHOD_(void, MoveWindowIntoZoneByIndex)
-    (HWND window, HWND workAreaWindow, size_t index) = 0;
+    IFACEMETHOD_(void, MoveWindowIntoZoneByIndex)(HWND window, HWND workAreaWindow, ZoneIndex index) = 0;
     /**
      * Assign window to the zones based on the set of zone indices inside zone layout.
      *
@@ -66,9 +64,9 @@ interface __declspec(uuid("{E4839EB7-669D-49CF-84A9-71A2DFD851A3}")) IZoneSet : 
      * @param   workAreaWindow The m_window of a WorkArea, it's a hidden window representing the
      *                         current monitor desktop work area.
      * @param   indexSet       The set of zone indices within zone layout.
+     * @param   suppressMove   Whether we should just update the records or move window to the zone.
      */
-    IFACEMETHOD_(void, MoveWindowIntoZoneByIndexSet)
-    (HWND window, HWND workAreaWindow, const std::vector<size_t>& indexSet) = 0;
+    IFACEMETHOD_(void, MoveWindowIntoZoneByIndexSet)(HWND window, HWND workAreaWindow, const ZoneIndexSet& indexSet, bool suppressMove = false) = 0;
     /**
      * Assign window to the zone based on direction (using WIN + LEFT/RIGHT arrow), based on zone index numbers,
      * not their on-screen position.
@@ -82,8 +80,7 @@ interface __declspec(uuid("{E4839EB7-669D-49CF-84A9-71A2DFD851A3}")) IZoneSet : 
      * @returns Boolean which is always true if cycle argument is set, otherwise indicating if there is more
      *          zones left in the zone layout in which window can move.
      */
-    IFACEMETHOD_(bool, MoveWindowIntoZoneByDirectionAndIndex)
-    (HWND window, HWND workAreaWindow, DWORD vkCode, bool cycle) = 0;
+    IFACEMETHOD_(bool, MoveWindowIntoZoneByDirectionAndIndex)(HWND window, HWND workAreaWindow, DWORD vkCode, bool cycle) = 0;
     /**
      * Assign window to the zone based on direction (using WIN + LEFT/RIGHT/UP/DOWN arrow), based on
      * their on-screen position.
@@ -124,6 +121,21 @@ interface __declspec(uuid("{E4839EB7-669D-49CF-84A9-71A2DFD851A3}")) IZoneSet : 
     IFACEMETHOD_(void, MoveWindowIntoZoneByPoint)
     (HWND window, HWND workAreaWindow, POINT ptClient) = 0;
     /**
+     * Dismiss window from zone.
+     *
+     * @param   window         Handle of window which should be dismissed from zone.
+     */
+    IFACEMETHOD_(void, DismissWindow)
+    (HWND window) = 0;
+    /**
+     * Cycle through tabs in the zone that the window is in.
+     *
+     * @param   window       Handle of window which is cycled from (the current tab).
+     * @param   reverse      Whether to cycle in reverse order (to the previous tab) or to move to the next tab.
+     */
+    IFACEMETHOD_(void, CycleTabs)
+    (HWND window, bool reverse) = 0;
+    /**
      * Calculate zone coordinates within zone layout based on number of zones and spacing.
      *
      * @param   workAreaRect The rectangular area on the screen on which the zone layout is applied.
@@ -140,7 +152,7 @@ interface __declspec(uuid("{E4839EB7-669D-49CF-84A9-71A2DFD851A3}")) IZoneSet : 
      *
      * @returns Boolean indicating whether the zone is empty.
      */
-    IFACEMETHOD_(bool, IsZoneEmpty)(int zoneIndex) const = 0;
+    IFACEMETHOD_(bool, IsZoneEmpty)(ZoneIndex zoneIndex) const = 0;
     /**
      * Returns all zones spanned by the minimum bounding rectangle containing the two given zone index sets.
      * 
@@ -149,7 +161,7 @@ interface __declspec(uuid("{E4839EB7-669D-49CF-84A9-71A2DFD851A3}")) IZoneSet : 
      *
      * @returns A vector indicating describing the chosen zone index set.
      */
-    IFACEMETHOD_(std::vector<size_t>, GetCombinedZoneRange)(const std::vector<size_t>& initialZones, const std::vector<size_t>& finalZones) const = 0;
+    IFACEMETHOD_(ZoneIndexSet, GetCombinedZoneRange)(const ZoneIndexSet& initialZones, const ZoneIndexSet& finalZones) const = 0;
 };
 
 struct ZoneSetConfig

@@ -7,6 +7,7 @@ using System.ComponentModel.Composition;
 using System.Windows;
 using ColorPicker.Settings;
 using ColorPicker.ViewModelContracts;
+using Common.UI;
 using Microsoft.PowerToys.Settings.UI.Library.Enumerations;
 
 namespace ColorPicker.Helpers
@@ -19,6 +20,9 @@ namespace ColorPicker.Helpers
         private ColorEditorWindow _colorEditorWindow;
         private bool _colorPickerShown;
         private object _colorPickerVisibilityLock = new object();
+
+        // Blocks using the escape key to close the color picker editor when the adjust color flyout is open.
+        public static bool BlockEscapeKeyClosingColorPickerEditor { get; set; }
 
         [ImportingConstructor]
         public AppStateHandler(IColorEditorViewModel colorEditorViewModel, IUserSettings userSettings)
@@ -36,6 +40,7 @@ namespace ColorPicker.Helpers
 
         public void StartUserSession()
         {
+            EndUserSession(); // Ends current user session if there's an active one.
             lock (_colorPickerVisibilityLock)
             {
                 if (!_colorPickerShown && !IsColorPickerEditorVisible())
@@ -130,6 +135,7 @@ namespace ColorPicker.Helpers
                 _colorEditorWindow = new ColorEditorWindow(this);
                 _colorEditorWindow.Content = _colorEditorViewModel;
                 _colorEditorViewModel.OpenColorPickerRequested += ColorEditorViewModel_OpenColorPickerRequested;
+                _colorEditorViewModel.OpenSettingsRequested += ColorEditorViewModel_OpenSettingsRequested;
                 _colorEditorViewModel.OpenColorPickerRequested += (object sender, EventArgs e) =>
                 {
                     SessionEventHelper.Event.EditorColorPickerOpened = true;
@@ -149,7 +155,7 @@ namespace ColorPicker.Helpers
             }
         }
 
-        private bool IsColorPickerEditorVisible()
+        public bool IsColorPickerEditorVisible()
         {
             if (_colorEditorWindow != null)
             {
@@ -158,6 +164,11 @@ namespace ColorPicker.Helpers
             }
 
             return false;
+        }
+
+        public bool IsColorPickerVisible()
+        {
+            return _colorPickerShown;
         }
 
         private void MainWindow_Closed(object sender, EventArgs e)
@@ -173,6 +184,11 @@ namespace ColorPicker.Helpers
             }
 
             _colorEditorWindow.Hide();
+        }
+
+        private void ColorEditorViewModel_OpenSettingsRequested(object sender, EventArgs e)
+        {
+            SettingsDeepLink.OpenSettings(SettingsDeepLink.SettingsWindow.ColorPicker);
         }
     }
 }

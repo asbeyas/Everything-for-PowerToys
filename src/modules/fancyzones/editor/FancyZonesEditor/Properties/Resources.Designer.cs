@@ -151,20 +151,11 @@ namespace FancyZonesEditor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error logged to .
-        /// </summary>
-        public static string Crash_Report_Message_Box_Text_Part1 {
-            get {
-                return ResourceManager.GetString("Crash_Report_Message_Box_Text_Part1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Please report the bug to .
         /// </summary>
-        public static string Crash_Report_Message_Box_Text_Part2 {
+        public static string Crash_Report_Message_Box_Text {
             get {
-                return ResourceManager.GetString("Crash_Report_Message_Box_Text_Part2", resourceCulture);
+                return ResourceManager.GetString("Crash_Report_Message_Box_Text", resourceCulture);
             }
         }
         
@@ -241,6 +232,15 @@ namespace FancyZonesEditor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete layout dialog..
+        /// </summary>
+        public static string Delete_Layout_Dialog_Announce {
+            get {
+                return ResourceManager.GetString("Delete_Layout_Dialog_Announce", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete zone.
         /// </summary>
         public static string Delete_Zone {
@@ -277,11 +277,20 @@ namespace FancyZonesEditor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Edit layout.
+        ///   Looks up a localized string similar to opened.
         /// </summary>
-        public static string Edit_Layout {
+        public static string Edit_Layout_Open_Announce {
             get {
-                return ResourceManager.GetString("Edit_Layout", resourceCulture);
+                return ResourceManager.GetString("Edit_Layout_Open_Announce", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit &apos;{0}&apos;.
+        /// </summary>
+        public static string Edit_Template {
+            get {
+                return ResourceManager.GetString("Edit_Template", resourceCulture);
             }
         }
         
@@ -448,6 +457,29 @@ namespace FancyZonesEditor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 
+        ///     - [Shift]+S to split currently focused zone.
+        ///     - Ctrl+Tab to focus zones/resizers.
+        ///     - Tab to cycle zones and resizers.
+        ///     - Delete to remove the focused resizer.
+        ///     - Arrows to move the focused resizer..
+        /// </summary>
+        public static string KeyboardControlsDescription {
+            get {
+                return ResourceManager.GetString("KeyboardControlsDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keyboard Navigation:.
+        /// </summary>
+        public static string KeyboardControlsName {
+            get {
+                return ResourceManager.GetString("KeyboardControlsName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Create layouts that have overlapping zones.
         /// </summary>
         public static string Layout_Canvas_Description {
@@ -462,6 +494,15 @@ namespace FancyZonesEditor.Properties {
         public static string Layout_Canvas_Title {
             get {
                 return ResourceManager.GetString("Layout_Canvas_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to custom layout was created successfully..
+        /// </summary>
+        public static string Layout_Creation_Announce {
+            get {
+                return ResourceManager.GetString("Layout_Creation_Announce", resourceCulture);
             }
         }
         
@@ -529,6 +570,15 @@ namespace FancyZonesEditor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to New zone added.
+        /// </summary>
+        public static string New_zone_added {
+            get {
+                return ResourceManager.GetString("New_zone_added", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Create or duplicate a layout to get started.
         /// </summary>
         public static string No_Custom_Layouts_Message {
@@ -552,6 +602,15 @@ namespace FancyZonesEditor.Properties {
         public static string NumberOfZones {
             get {
                 return ResourceManager.GetString("NumberOfZones", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open settings.
+        /// </summary>
+        public static string OpenSettings {
+            get {
+                return ResourceManager.GetString("OpenSettings", resourceCulture);
             }
         }
         

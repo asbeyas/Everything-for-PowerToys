@@ -93,25 +93,6 @@ steps:
     msbuildArgs: ${{ parameters.additionalBuildArguments }}
     maximumCpuCount: true
 
-- task: NuGetCommand@2
-  displayName: Restore NuGet packages for PowerToysBootstrapper.sln
-  inputs:
-    command: restore
-    feedsToUse: config
-    configPath: NuGet.config
-    restoreSolution: installer\PowerToysBootstrapper\PowerToysBootstrapper.sln
-    restoreDirectory: '$(Build.SourcesDirectory)\installer\PowerToysBootstrapper\packages'
-
-- task: VSBuild@1
-  displayName: 'Build PowerToysBootstrapper.sln'
-  inputs:
-    solution: '**\installer\PowerToysBootstrapper\PowerToysBootstrapper.sln'
-    vsVersion: 16.0
-    platform: '$(BuildPlatform)'
-    configuration: '$(BuildConfiguration)'
-    msbuildArgs: ${{ parameters.additionalBuildArguments }}
-    maximumCpuCount: true
-
 # directly not doing WinAppDriver testing
 - task: VSTest@2
   displayName: 'MS Tests'
@@ -120,40 +101,28 @@ steps:
     configuration: '$(BuildConfiguration)'
     testSelector: 'testAssemblies'
     testAssemblyVer2: |
+      **\UnitTests-GcodeThumbnailProvider.dll
       **\UnitTests-SvgThumbnailProvider.dll
-      **\Microsoft.PowerToys.Settings.UI.UnitTests.dll
+      **\UnitTests-PdfThumbnailProvider.dll
+      **\Settings.UI.UnitTests.dll
+      **\UnitTests-MarkdownPreviewHandler.dll
+      **\UnitTests-GcodePreviewHandler.dll
+      **\UnitTests-PdfPreviewHandler.dll
       **\UnitTests-SvgPreviewHandler.dll
       **\UnitTests-PreviewHandlerCommon.dll
       **\PreviewPaneUnitTests.dll
       **\Microsoft.PowerToys.Run.Plugin.Registry.UnitTests.dll
       **\UnitTest-ColorPickerUI.dll
       **\Microsoft.Interop.Tests.dll
-      !**\obj\**
-
-- task: VSTest@2
-  displayName: 'XUnit Tests'
-  inputs:
-    platform: '$(BuildPlatform)'
-    configuration: '$(BuildConfiguration)'
-    testSelector: 'testAssemblies'
-    testAssemblyVer2: |
       **\ImageResizer.Test.dll
-      !**\obj\**
-
-- task: VSTest@2
-  displayName: 'NUnit Tests'
-  inputs:
-    platform: '$(BuildPlatform)'
-    configuration: '$(BuildConfiguration)'
-    testSelector: 'testAssemblies'
-    testAssemblyVer2: |
       **\Community.PowerToys.Run.Plugin.UnitConverter.UnitTest.dll
       **\Microsoft.Plugin.Folder.UnitTests.dll
       **\Microsoft.Plugin.Program.UnitTests.dll
       **\Microsoft.PowerToys.Run.Plugin.Calculator.UnitTest.dll
       **\Microsoft.Plugin.Uri.UnitTests.dll
       **\Wox.Test.dll
-      **\Microsoft.PowerToys.Run.Plugin.System.UnitTests.dll
+      **\Microsoft.PowerToys.Run.Plugin.System.UnitTests.dll     
+      **\Microsoft.PowerToys.Run.Plugin.WindowsTerminal.UnitTests.dll
       !**\obj\**
 
 # Native dlls
