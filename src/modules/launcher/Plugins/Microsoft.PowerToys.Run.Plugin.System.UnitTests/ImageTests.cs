@@ -27,15 +27,20 @@ namespace Microsoft.PowerToys.Run.Plugin.System.UnitTests
         [DataRow("sleep", "Images\\sleep.dark.png")]
         [DataRow("hibernate", "Images\\sleep.dark.png")]
         [DataRow("empty recycle", "Images\\recyclebin.dark.png")]
-        public void IconThemeDarkTest(string typedString, string expectedResult)
+        [DataRow("uefi firmware settings", "Images\\firmwareSettings.dark.png")]
+        [DataRow("ip v4 addr", "Images\\networkAdapter.dark.png", true)]
+        [DataRow("ip v6 addr", "Images\\networkAdapter.dark.png", true)]
+        [DataRow("mac addr", "Images\\networkAdapter.dark.png", true)]
+        public void IconThemeDarkTest(string typedString, string expectedResult, bool isDelayed = default)
         {
             // Setup
             Mock<Main> main = new Mock<Main>();
             main.Object.IconTheme = "dark";
+            main.Object.IsBootedInUefiMode = true; // Set to true that we can test, regardless of the environment we run on.
             Query expectedQuery = new Query(typedString);
 
             // Act
-            var result = main.Object.Query(expectedQuery).FirstOrDefault().IcoPath;
+            var result = !isDelayed ? main.Object.Query(expectedQuery).FirstOrDefault().IcoPath : main.Object.Query(expectedQuery, true).FirstOrDefault().IcoPath;
 
             // Assert
             Assert.AreEqual(expectedResult, result);
@@ -49,15 +54,20 @@ namespace Microsoft.PowerToys.Run.Plugin.System.UnitTests
         [DataRow("sleep", "Images\\sleep.light.png")]
         [DataRow("hibernate", "Images\\sleep.light.png")]
         [DataRow("empty recycle", "Images\\recyclebin.light.png")]
-        public void IconThemeLightTest(string typedString, string expectedResult)
+        [DataRow("uefi firmware settings", "Images\\firmwareSettings.light.png")]
+        [DataRow("ipv4 addr", "Images\\networkAdapter.light.png", true)]
+        [DataRow("ipv6 addr", "Images\\networkAdapter.light.png", true)]
+        [DataRow("mac addr", "Images\\networkAdapter.light.png", true)]
+        public void IconThemeLightTest(string typedString, string expectedResult, bool isDelayed = default)
         {
             // Setup
             Mock<Main> main = new Mock<Main>();
             main.Object.IconTheme = "light";
+            main.Object.IsBootedInUefiMode = true; // Set to true that we can test, regardless of the environment we run on.
             Query expectedQuery = new Query(typedString);
 
             // Act
-            var result = main.Object.Query(expectedQuery).FirstOrDefault().IcoPath;
+            var result = !isDelayed ? main.Object.Query(expectedQuery).FirstOrDefault().IcoPath : main.Object.Query(expectedQuery, true).FirstOrDefault().IcoPath;
 
             // Assert
             Assert.AreEqual(expectedResult, result);

@@ -4,7 +4,7 @@
 
 using Microsoft.PowerToys.Settings.UI.Library;
 using Microsoft.PowerToys.Settings.UI.Library.ViewModels;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 
 namespace Microsoft.PowerToys.Settings.UI.Views
 {
@@ -33,7 +33,14 @@ namespace Microsoft.PowerToys.Settings.UI.Views
             }
 
             var settingsUtils = new SettingsUtils();
-            ViewModel = new MouseUtilsViewModel(settingsUtils, SettingsRepository<GeneralSettings>.GetInstance(settingsUtils), SettingsRepository<FindMyMouseSettings>.GetInstance(settingsUtils), SettingsRepository<MouseHighlighterSettings>.GetInstance(settingsUtils), ShellPage.SendDefaultIPCMessage);
+            ViewModel = new MouseUtilsViewModel(
+                settingsUtils,
+                SettingsRepository<GeneralSettings>.GetInstance(settingsUtils),
+                SettingsRepository<FindMyMouseSettings>.GetInstance(settingsUtils),
+                SettingsRepository<MouseHighlighterSettings>.GetInstance(settingsUtils),
+                SettingsRepository<MousePointerCrosshairsSettings>.GetInstance(settingsUtils),
+                ShellPage.SendDefaultIPCMessage);
+
             DataContext = ViewModel;
             InitializeComponent();
         }

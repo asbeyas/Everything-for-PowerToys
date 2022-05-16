@@ -14,7 +14,6 @@
 
 // TODO: would be nice to get rid of these globals, since they're basically cached json settings
 static std::wstring settings_theme = L"system";
-static bool startup_disabled_manually = false;
 static bool run_as_elevated = false;
 static bool download_updates_automatically = true;
 
@@ -85,6 +84,7 @@ GeneralSettings get_general_settings()
 
 void apply_general_settings(const json::JsonObject& general_configs, bool save)
 {
+    Logger::info(L"apply_general_settings: {}", std::wstring{ general_configs.ToString() });
     run_as_elevated = general_configs.GetNamedBoolean(L"run_elevated", false);
 
     download_updates_automatically = general_configs.GetNamedBoolean(L"download_updates_automatically", true);
@@ -93,19 +93,7 @@ void apply_general_settings(const json::JsonObject& general_configs, bool save)
     {
         const bool startup = general_configs.GetNamedBoolean(L"startup");
 
-        auto settings = get_general_settings();
-        static std::once_flag once_flag;
-        std::call_once(once_flag, [settings, startup, general_configs] {
-            if (json::has(general_configs, L"startup", json::JsonValueType::Boolean))
-            {
-                if (startup == true && settings.isStartupEnabled == false)
-                {
-                    startup_disabled_manually = true;
-                }
-            }
-        });
-
-        if (startup && !startup_disabled_manually)
+        if (startup)
         {
             if (is_process_elevated())
             {
@@ -131,7 +119,6 @@ void apply_general_settings(const json::JsonObject& general_configs, bool save)
         else
         {
             delete_auto_start_task_for_this_user();
-            startup_disabled_manually = false;
         }
     }
     if (json::has(general_configs, L"enabled"))
@@ -149,7 +136,8 @@ void apply_general_settings(const json::JsonObject& general_configs, bool save)
             {
                 continue;
             }
-            const bool module_inst_enabled = modules().at(name)->is_enabled();
+            PowertoyModule& powertoy = modules().at(name);
+            const bool module_inst_enabled = powertoy->is_enabled();
             const bool target_enabled = value.GetBoolean();
             if (module_inst_enabled == target_enabled)
             {
@@ -157,12 +145,16 @@ void apply_general_settings(const json::JsonObject& general_configs, bool save)
             }
             if (target_enabled)
             {
-                modules().at(name)->enable();
+                Logger::info(L"apply_general_settings: Enabling powertoy {}", name);
+                powertoy->enable();
             }
             else
             {
-                modules().at(name)->disable();
+                Logger::info(L"apply_general_settings: Disabling powertoy {}", name);
+                powertoy->disable();
             }
+            // Sync the hotkey state with the module state, so it can be removed for disabled modules.
+            powertoy.UpdateHotkeyEx();
         }
     }
 
@@ -202,11 +194,13 @@ void start_enabled_powertoys()
                 // Disable explicitly disabled modules
                 if (!disabled_element.Value().GetBoolean())
                 {
+                    Logger::info(L"start_enabled_powertoys: Powertoy {} explicitly disabled", disable_module_name);
                     powertoys_to_disable.emplace(std::move(disable_module_name));
                 }
                 // If module was scheduled for disable, but it's enabled in the settings - override default value
                 else if (auto it = powertoys_to_disable.find(disable_module_name); it != end(powertoys_to_disable))
                 {
+                    Logger::info(L"start_enabled_powertoys: Overriding default enabled value for {} powertoy", disable_module_name);
                     powertoys_to_disable.erase(it);
                 }
             }
@@ -220,7 +214,9 @@ void start_enabled_powertoys()
     {
         if (!powertoys_to_disable.contains(name))
         {
+            Logger::info(L"start_enabled_powertoys: Enabling powertoy {}", name);
             powertoy->enable();
+            powertoy.UpdateHotkeyEx();
         }
     }
 }

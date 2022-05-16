@@ -105,7 +105,7 @@ void debug_verify_launcher_assets()
     }
 }
 
-int runner(bool isProcessElevated, bool openSettings, std::string settingsWindow, bool openOobe)
+int runner(bool isProcessElevated, bool openSettings, std::string settingsWindow, bool openOobe, bool openScoobe)
 {
     Logger::info("Runner is starting. Elevated={}", isProcessElevated);
     DPIAware::EnableDPIAwarenessForThisProcess();
@@ -151,7 +151,7 @@ int runner(bool isProcessElevated, bool openSettings, std::string settingsWindow
             L"modules/MouseUtils/PowerToys.FindMyMouse.dll" ,
             L"modules/MouseUtils/PowerToys.MouseHighlighter.dll",
             L"modules/AlwaysOnTop/PowerToys.AlwaysOnTopModuleInterface.dll",
-
+            L"modules/MouseUtils/PowerToys.MousePointerCrosshairs.dll",
         };
         const auto VCM_PATH = L"modules/VideoConference/PowerToys.VideoConferenceModule.dll";
         if (const auto mf = LoadLibraryA("mf.dll"))
@@ -179,8 +179,9 @@ int runner(bool isProcessElevated, bool openSettings, std::string settingsWindow
         }
         // Start initial powertoys
         start_enabled_powertoys();
-
-        Trace::EventLaunch(get_product_version(), isProcessElevated);
+        std::wstring product_version = get_product_version();
+        Trace::EventLaunch(product_version, isProcessElevated);
+        PTSettingsHelper::save_last_version_run(product_version);
 
         if (openSettings)
         {
@@ -194,7 +195,12 @@ int runner(bool isProcessElevated, bool openSettings, std::string settingsWindow
 
         if (openOobe)
         {
+            PTSettingsHelper::save_oobe_opened_state();
             open_oobe_window();
+        }
+        else if (openScoobe)
+        {
+            open_scoobe_window();
         }
 
         settings_telemetry::init();
@@ -339,6 +345,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     Logger::init(LogSettings::runnerLoggerName, logFilePath.wstring(), PTSettingsHelper::get_log_settings_file_location());
 
     const std::string cmdLine{ lpCmdLine };
+    Logger::info("Running powertoys with cmd args: {}", cmdLine);
+
     auto open_settings_it = cmdLine.find("--open-settings");
     const bool open_settings = open_settings_it != std::string::npos;
     // Check if opening specific settings window
@@ -363,14 +371,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     try
     {
         openOobe = !PTSettingsHelper::get_oobe_opened_state();
-        if (openOobe)
-        {
-            PTSettingsHelper::save_oobe_opened_state();
-        }
     }
     catch (const std::exception& e)
     {
         Logger::error("Failed to get or save OOBE state with an exception: {}", e.what());
+    }
+
+    bool openScoobe = false;
+    try
+    {
+        std::wstring last_version_run = PTSettingsHelper::get_last_version_run();
+        openScoobe = last_version_run != get_product_version();
+    }
+    catch (const std::exception& e)
+    {
+        Logger::error("Failed to get last version with an exception: {}", e.what());
     }
 
     int result = 0;
@@ -386,14 +401,28 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         apply_general_settings(general_settings, false);
         int rvalue = 0;
         const bool elevated = is_process_elevated();
-        if ((elevated ||
-             general_settings.GetNamedBoolean(L"run_elevated", false) == false ||
-             cmdLine.find("--dont-elevate") != std::string::npos))
+        const bool with_dont_elevate_arg = cmdLine.find("--dont-elevate") != std::string::npos;
+        const bool run_elevated_setting = general_settings.GetNamedBoolean(L"run_elevated", false);
+
+        if (elevated && with_dont_elevate_arg && !run_elevated_setting)
+
         {
-            result = runner(elevated, open_settings, settings_window, openOobe);
+            Logger::info("Scheduling restart as non elevated");
+            schedule_restart_as_non_elevated();
+            result = 0;
+        }
+        else if (elevated || !run_elevated_setting || with_dont_elevate_arg)
+
+        {
+            result = runner(elevated, open_settings, settings_window, openOobe, openScoobe);
+
+            // Save settings on closing
+            auto general_settings = get_general_settings();
+            PTSettingsHelper::save_general_settings(general_settings.to_json());
         }
         else
         {
+            Logger::info("Scheduling restart as elevated");
             schedule_restart_as_elevated(open_settings);
             result = 0;
         }
@@ -405,10 +434,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         result = -1;
     }
 
-    // Save settings on closing
-    auto general_settings = load_general_settings();
-    apply_general_settings(general_settings);
-
     // We need to release the mutexes to be able to restart the application
     if (msi_mutex)
     {
@@ -417,14 +442,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     if (is_restart_scheduled())
     {
-        if (restart_if_scheduled() == false)
+        if (!restart_if_scheduled())
         {
-            auto text = is_process_elevated() ? GET_RESOURCE_STRING(IDS_COULDNOT_RESTART_NONELEVATED) :
-                                                GET_RESOURCE_STRING(IDS_COULDNOT_RESTART_ELEVATED);
-            MessageBoxW(nullptr, text.c_str(), GET_RESOURCE_STRING(IDS_ERROR).c_str(), MB_OK | MB_ICONERROR | MB_SETFOREGROUND);
-
-            restart_same_elevation();
-            result = -1;
+            // If it's not possible to restart non-elevated due to some condition in the user's configuration, user should start PowerToys manually.
+            Logger::warn("Scheduled restart failed. Couldn't restart non-elevated. PowerToys exits here because retrying it would just mean failing in a loop.");
         }
     }
     stop_tray_icon();

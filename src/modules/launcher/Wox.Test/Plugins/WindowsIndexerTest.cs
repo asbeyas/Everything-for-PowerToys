@@ -7,8 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Plugin.Indexer;
 using Microsoft.Plugin.Indexer.DriveDetection;
+using Microsoft.Plugin.Indexer.Interop;
 using Microsoft.Plugin.Indexer.SearchHelper;
-using Microsoft.Search.Interop;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Wox.Plugin;
@@ -291,11 +291,12 @@ namespace Wox.Test.Plugins
             List<ContextMenuResult> contextMenuItems = contextMenuLoader.LoadContextMenus(result);
 
             // Assert
-            Assert.AreEqual(4, contextMenuItems.Count);
+            Assert.AreEqual(5, contextMenuItems.Count);
             Assert.AreEqual(Microsoft.Plugin.Indexer.Properties.Resources.Microsoft_plugin_indexer_open_containing_folder, contextMenuItems[0].Title);
             Assert.AreEqual(Microsoft.Plugin.Indexer.Properties.Resources.Microsoft_plugin_indexer_run_as_administrator, contextMenuItems[1].Title);
-            Assert.AreEqual(Microsoft.Plugin.Indexer.Properties.Resources.Microsoft_plugin_indexer_copy_path, contextMenuItems[2].Title);
-            Assert.AreEqual(Microsoft.Plugin.Indexer.Properties.Resources.Microsoft_plugin_indexer_open_in_console, contextMenuItems[3].Title);
+            Assert.AreEqual(Microsoft.Plugin.Indexer.Properties.Resources.Microsoft_plugin_indexer_run_as_user, contextMenuItems[2].Title);
+            Assert.AreEqual(Microsoft.Plugin.Indexer.Properties.Resources.Microsoft_plugin_indexer_copy_path, contextMenuItems[3].Title);
+            Assert.AreEqual(Microsoft.Plugin.Indexer.Properties.Resources.Microsoft_plugin_indexer_open_in_console, contextMenuItems[4].Title);
         }
 
         [DataTestMethod]

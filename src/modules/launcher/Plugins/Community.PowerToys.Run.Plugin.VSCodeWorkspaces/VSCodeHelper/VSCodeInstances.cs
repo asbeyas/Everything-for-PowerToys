@@ -15,7 +15,7 @@ namespace Community.PowerToys.Run.Plugin.VSCodeWorkspaces.VSCodeHelper
 {
     public static class VSCodeInstances
     {
-        private static string _systemPath = string.Empty;
+        private static List<string> _paths = new List<string>();
 
         private static string _userAppDataPath = Environment.GetEnvironmentVariable("AppData");
 
@@ -62,20 +62,29 @@ namespace Community.PowerToys.Run.Plugin.VSCodeWorkspaces.VSCodeHelper
         // Gets the executablePath and AppData foreach instance of VSCode
         public static void LoadVSCodeInstances()
         {
-            if (_systemPath != Environment.GetEnvironmentVariable("PATH"))
+            var environmentPath = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.User);
+            environmentPath += (environmentPath.Length > 0 && environmentPath.EndsWith(';') ? ";" : string.Empty) + Environment.GetEnvironmentVariable("PATH");
+            var paths = environmentPath.Split(";").ToList();
+            paths = paths.Distinct().ToList();
+
+            var deletedItems = paths.Except(_paths).Any();
+            var newItems = _paths.Except(paths).Any();
+
+            if (newItems || deletedItems)
             {
                 Instances = new List<VSCodeInstance>();
 
-                _systemPath = Environment.GetEnvironmentVariable("PATH");
-                var paths = _systemPath.Split(";");
-                paths = paths.Where(x => x.Contains("VS Code")).ToArray();
+                paths = paths.Where(x =>
+                                    x.Contains("VS Code",  StringComparison.OrdinalIgnoreCase) ||
+                                    x.Contains("VSCodium", StringComparison.OrdinalIgnoreCase) ||
+                                    x.Contains("vscode", StringComparison.OrdinalIgnoreCase)).ToList();
                 foreach (var path in paths)
                 {
                     if (Directory.Exists(path))
                     {
                         var files = Directory.GetFiles(path);
                         var iconPath = Path.GetDirectoryName(path);
-                        files = files.Where(x => x.Contains("code") && !x.EndsWith(".cmd")).ToArray();
+                        files = files.Where(x => (x.Contains("code") || x.Contains("VSCodium")) && !x.EndsWith(".cmd", StringComparison.OrdinalIgnoreCase)).ToArray();
 
                         if (files.Length > 0)
                         {
@@ -87,20 +96,25 @@ namespace Community.PowerToys.Run.Plugin.VSCodeWorkspaces.VSCodeHelper
                                 ExecutablePath = file,
                             };
 
-                            if (file.EndsWith("code"))
+                            if (file.EndsWith("code", StringComparison.OrdinalIgnoreCase))
                             {
                                 version = "Code";
                                 instance.VSCodeVersion = VSCodeVersion.Stable;
                             }
-                            else if (file.EndsWith("code-insiders"))
+                            else if (file.EndsWith("code-insiders", StringComparison.OrdinalIgnoreCase))
                             {
                                 version = "Code - Insiders";
                                 instance.VSCodeVersion = VSCodeVersion.Insiders;
                             }
-                            else if (file.EndsWith("code-exploration"))
+                            else if (file.EndsWith("code-exploration", StringComparison.OrdinalIgnoreCase))
                             {
                                 version = "Code - Exploration";
                                 instance.VSCodeVersion = VSCodeVersion.Exploration;
+                            }
+                            else if (file.EndsWith("VSCodium", StringComparison.OrdinalIgnoreCase))
+                            {
+                                version = "VSCodium";
+                                instance.VSCodeVersion = VSCodeVersion.Stable; // ?
                             }
 
                             if (version != string.Empty)

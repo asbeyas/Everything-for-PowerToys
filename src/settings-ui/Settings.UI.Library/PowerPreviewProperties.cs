@@ -63,7 +63,41 @@ namespace Microsoft.PowerToys.Settings.UI.Library
             }
         }
 
-        private bool enablePdfPreview = true;
+        private bool enableMonacoPreview = true;
+
+        [JsonPropertyName("monaco-previewer-toggle-setting")]
+        [JsonConverter(typeof(BoolPropertyJsonConverter))]
+        public bool EnableMonacoPreview
+        {
+            get => enableMonacoPreview;
+            set
+            {
+                if (value != enableMonacoPreview)
+                {
+                    LogTelemetryEvent(value);
+                    enableMonacoPreview = value;
+                }
+            }
+        }
+
+        private bool monacoPreviewWordWrap = true;
+
+        [JsonPropertyName("monaco-previewer-toggle-setting-word-wrap")]
+        [JsonConverter(typeof(BoolPropertyJsonConverter))]
+        public bool EnableMonacoPreviewWordWrap
+        {
+            get => monacoPreviewWordWrap;
+            set
+            {
+                if (value != monacoPreviewWordWrap)
+                {
+                    LogTelemetryEvent(value);
+                    monacoPreviewWordWrap = value;
+                }
+            }
+        }
+
+        private bool enablePdfPreview;
 
         [JsonPropertyName("pdf-previewer-toggle-setting")]
         [JsonConverter(typeof(BoolPropertyJsonConverter))]
@@ -80,7 +114,7 @@ namespace Microsoft.PowerToys.Settings.UI.Library
             }
         }
 
-        private bool enablePdfThumbnail = true;
+        private bool enablePdfThumbnail;
 
         [JsonPropertyName("pdf-thumbnail-toggle-setting")]
         [JsonConverter(typeof(BoolPropertyJsonConverter))]
@@ -127,6 +161,23 @@ namespace Microsoft.PowerToys.Settings.UI.Library
                 {
                     LogTelemetryEvent(value);
                     enableGcodeThumbnail = value;
+                }
+            }
+        }
+
+        private bool enableStlThumbnail = true;
+
+        [JsonPropertyName("stl-thumbnail-toggle-setting")]
+        [JsonConverter(typeof(BoolPropertyJsonConverter))]
+        public bool EnableStlThumbnail
+        {
+            get => enableStlThumbnail;
+            set
+            {
+                if (value != enableStlThumbnail)
+                {
+                    LogTelemetryEvent(value);
+                    enableStlThumbnail = value;
                 }
             }
         }

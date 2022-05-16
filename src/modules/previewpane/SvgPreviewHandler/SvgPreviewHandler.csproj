@@ -1,37 +1,28 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Platforms>x64</Platforms>
     <UseWindowsForms>true</UseWindowsForms>
     <AssemblyTitle>PowerToys.SvgPreviewHandler</AssemblyTitle>
     <AssemblyDescription>PowerToys SvgPreviewHandler</AssemblyDescription>
-    <AssemblyCompany>Microsoft Corporation</AssemblyCompany>
-    <AssemblyCopyright>Copyright (C) 2020 Microsoft Corporation</AssemblyCopyright>
-    <AssemblyProduct>PowerToys</AssemblyProduct>
-    <Company>Microsoft Corporation</Company>
-    <Product>PowerToys</Product>
-    <NeutralLanguage>en-US</NeutralLanguage>
     <Description>PowerToys SvgPreviewHandler</Description>
-    <Copyright>Copyright (C) 2020 Microsoft Corporation</Copyright>
-    <OutputPath>$(SolutionDir)$(Platform)\$(Configuration)\modules\FileExplorerPreview\</OutputPath>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <OutputPath>..\..\..\..\$(Platform)\$(Configuration)\modules\FileExplorerPreview\</OutputPath>
     <DocumentationFile>$(SolutionDir)$(Platform)\$(Configuration)\modules\FileExplorerPreview\SvgPreviewHandler.xml</DocumentationFile>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <RuntimeIdentifiers>win10-x64;win10-arm64</RuntimeIdentifiers>
+    <TargetFramework>net6.0-windows10.0.18362.0</TargetFramework>
   </PropertyGroup>
-  
+
   <PropertyGroup>
     <ProjectGuid>{DA425894-6E13-404F-8DCB-78584EC0557A}</ProjectGuid>
     <RootNamespace>Microsoft.PowerToys.PreviewHandler.Svg</RootNamespace>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
     <EnableComHosting>true</EnableComHosting>
     <IntermediateOutputPath>$(SolutionDir)$(Platform)\$(Configuration)\obj\$(AssemblyName)\</IntermediateOutputPath>
     <AssemblyName>PowerToys.SvgPreviewHandler</AssemblyName>
   </PropertyGroup>
 
   <Import Project="..\..\..\Version.props" />
-  
+
   <ItemGroup>
     <Compile Include="..\..\..\codeAnalysis\GlobalSuppressions.cs" Link="GlobalSuppressions.cs" />
     <Compile Update="Properties\Resource.Designer.cs">
@@ -41,22 +32,24 @@
     </Compile>
     <Compile Update="SvgPreviewControl.cs" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\..\..\common\ManagedTelemetry\Telemetry\ManagedTelemetry.csproj" />
     <ProjectReference Include="..\common\PreviewHandlerCommon.csproj" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <AdditionalFiles Include="..\..\..\codeAnalysis\StyleCop.json">
       <Link>StyleCop.json</Link>
     </AdditionalFiles>
   </ItemGroup>
-  
+
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1150.38" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

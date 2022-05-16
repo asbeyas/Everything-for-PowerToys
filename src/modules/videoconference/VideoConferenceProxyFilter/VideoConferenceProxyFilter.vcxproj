@@ -9,6 +9,10 @@
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|ARM64">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
@@ -16,6 +20,10 @@
     <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM64">
+      <Configuration>Release</Configuration>
+      <Platform>ARM64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -30,6 +38,18 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)'=='Debug'">
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)'=='Release'">
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -60,13 +80,13 @@
     <Lib>
       <TreatLibWarningAsErrors>true</TreatLibWarningAsErrors>
     </Lib>
-    <PreBuildEvent Condition="'$(Platform)'=='x64'">
+    <PreBuildEvent Condition="'$(Platform)'!='Win32'">
       <Command>call "$(ProjectDir)build_vcm_x86.cmd"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <PropertyGroup Condition="'$(Platform)'!='Win32'">
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\modules\VideoConference\</OutDir>
-    <TargetName>PowerToys.VideoConferenceProxyFilter_x64</TargetName>
+    <TargetName>PowerToys.VideoConferenceProxyFilter_$(Platform)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Platform)'=='Win32'">
     <OutDir>..\..\..\..\x86\$(Configuration)\modules\VideoConference\</OutDir>
@@ -90,11 +110,15 @@
       <AdditionalDependencies>$(OutDir)VideoConferenceShared.lib;Windowscodecs.lib;Wtsapi32.lib;mfplat.lib;WindowsApp.lib;Mfsensorgroup.lib;Mf.lib;Shlwapi.lib;Strmiids.lib;%(AdditionalDependencies);</AdditionalDependencies>
       <ModuleDefinitionFile>module.def</ModuleDefinitionFile>
     </Link>
+    <ResourceCompile>
+      <PreprocessorDefinitions Condition="'$(Platform)'!='Win32'">_WIN64;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="DirectShowUtils.h" />
     <ClInclude Include="VideoCaptureDevice.h" />
     <ClInclude Include="VideoCaptureProxyFilter.h" />
+    <ClInclude Include="Generated Files/resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectShowUtils.cpp" />
@@ -106,6 +130,13 @@
   <ItemGroup>
     <None Include="module.def" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="resource.x86.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="VideoConferenceProxyFilter.rc" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VideoConferenceShared\VideoConferenceShared.vcxproj">

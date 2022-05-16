@@ -28,7 +28,7 @@ namespace Wox.Infrastructure
         {
             if (obj == null)
             {
-                throw new NullReferenceException();
+                throw new ArgumentNullException(nameof(obj));
             }
             else
             {
@@ -40,7 +40,7 @@ namespace Wox.Infrastructure
         {
             if (obj == null)
             {
-                throw new NullReferenceException();
+                throw new ArgumentNullException(nameof(obj));
             }
         }
 
@@ -101,7 +101,7 @@ namespace Wox.Infrastructure
             {
                 FileName = path,
                 WorkingDirectory = Path.GetDirectoryName(path),
-                Verb = "runas",
+                Verb = "runAs",
                 UseShellExecute = true,
             };
 
@@ -112,6 +112,28 @@ namespace Wox.Infrastructure
             catch (System.Exception ex)
             {
                 Log.Exception($"Unable to Run {path} as admin : {ex.Message}", ex, MethodBase.GetCurrentMethod().DeclaringType);
+            }
+        }
+
+        // Function to run as other user for context menu items
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Suppressing this to enable FxCop. We are logging the exception, and going forward general exceptions should not be caught")]
+        public static void RunAsUser(string path)
+        {
+            var info = new ProcessStartInfo
+            {
+                FileName = path,
+                WorkingDirectory = Path.GetDirectoryName(path),
+                Verb = "runAsUser",
+                UseShellExecute = true,
+            };
+
+            try
+            {
+                Process.Start(info);
+            }
+            catch (System.Exception ex)
+            {
+                Log.Exception($"Unable to Run {path} as different user : {ex.Message}", ex, MethodBase.GetCurrentMethod().DeclaringType);
             }
         }
 
@@ -126,20 +148,34 @@ namespace Wox.Infrastructure
             return Process.Start(processStartInfo);
         }
 
-        public static bool OpenInShell(string path, string arguments = null, string workingDir = null, bool runAsAdmin = false)
+        public static bool OpenCommandInShell(string path, string pattern, string arguments, string workingDir = null, ShellRunAsType runAs = ShellRunAsType.None, bool runWithHiddenWindow = false)
+        {
+            if (pattern.Contains("%1", StringComparison.Ordinal))
+            {
+                arguments = pattern.Replace("%1", arguments);
+            }
+
+            return OpenInShell(path, arguments, workingDir, runAs, runWithHiddenWindow);
+        }
+
+        public static bool OpenInShell(string path, string arguments = null, string workingDir = null, ShellRunAsType runAs = ShellRunAsType.None, bool runWithHiddenWindow = false)
         {
             using (var process = new Process())
             {
                 process.StartInfo.FileName = path;
                 process.StartInfo.WorkingDirectory = string.IsNullOrWhiteSpace(workingDir) ? string.Empty : workingDir;
                 process.StartInfo.Arguments = string.IsNullOrWhiteSpace(arguments) ? string.Empty : arguments;
+                process.StartInfo.WindowStyle = runWithHiddenWindow ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal;
+                process.StartInfo.UseShellExecute = true;
 
-                if (runAsAdmin)
+                if (runAs == ShellRunAsType.Administrator)
                 {
                     process.StartInfo.Verb = "RunAs";
                 }
-
-                process.StartInfo.UseShellExecute = true;
+                else if (runAs == ShellRunAsType.OtherUser)
+                {
+                    process.StartInfo.Verb = "RunAsUser";
+                }
 
                 try
                 {
@@ -152,6 +188,13 @@ namespace Wox.Infrastructure
                     return false;
                 }
             }
+        }
+
+        public enum ShellRunAsType
+        {
+            None,
+            Administrator,
+            OtherUser,
         }
     }
 }

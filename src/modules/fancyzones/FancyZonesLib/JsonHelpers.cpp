@@ -1,10 +1,15 @@
 #include "pch.h"
 
 #include "JsonHelpers.h"
-#include "FancyZonesData.h"
 #include "FancyZonesDataTypes.h"
 #include "trace.h"
 #include "util.h"
+
+#include <FancyZonesLib/FancyZonesData/AppliedLayouts.h>
+#include <FancyZonesLib/FancyZonesData/CustomLayouts.h>
+#include <FancyZonesLib/FancyZonesData/LayoutDefaults.h>
+#include <FancyZonesLib/FancyZonesData/LayoutHotkeys.h>
+#include <FancyZonesLib/FancyZonesData/LayoutTemplates.h>
 
 #include <common/logger/logger.h>
 
@@ -58,7 +63,8 @@ namespace NonLocalizable
 
     // Editor arguments
     const wchar_t Dpi[] = L"dpi";
-    const wchar_t MonitorId[] = L"monitor-id";
+    const wchar_t MonitorNameId[] = L"monitor";
+    const wchar_t VirtualDesktopId[] = L"virtual-desktop";
     const wchar_t TopCoordinate[] = L"top-coordinate";
     const wchar_t LeftCoordinate[] = L"left-coordinate";
     const wchar_t Width[] = L"width";
@@ -69,6 +75,169 @@ namespace NonLocalizable
     const wchar_t Monitors[] = L"monitors";
 }
 
+namespace BackwardsCompatibility
+{
+    std::optional<DeviceIdData> DeviceIdData::ParseDeviceId(const std::wstring& str)
+    {
+        DeviceIdData data;
+
+        std::wstring temp;
+        std::wstringstream wss(str);
+
+        /*
+        Important fix for device info that contains a '_' in the name:
+        1. first search for '#'
+        2. Then split the remaining string by '_'
+        */
+
+        // Step 1: parse the name until the #, then to the '_'
+        if (str.find(L'#') != std::string::npos)
+        {
+            std::getline(wss, temp, L'#');
+
+            data.deviceName = temp;
+
+            if (!std::getline(wss, temp, L'_'))
+            {
+                return std::nullopt;
+            }
+
+            data.deviceName += L"#" + temp;
+        }
+        else if (std::getline(wss, temp, L'_') && !temp.empty())
+        {
+            data.deviceName = temp;
+        }
+        else
+        {
+            return std::nullopt;
+        }
+
+        // Step 2: parse the rest of the id
+        std::vector<std::wstring> parts;
+        while (std::getline(wss, temp, L'_'))
+        {
+            parts.push_back(temp);
+        }
+
+        if (parts.size() != 3 && parts.size() != 4)
+        {
+            return std::nullopt;
+        }
+
+        /*
+        Refer to FancyZonesUtils::GenerateUniqueId parts contain:
+        1. monitor id [string]
+        2. width of device [int]
+        3. height of device [int]
+        4. virtual desktop id (GUID) [string]
+        */
+        try
+        {
+            for (const auto& c : parts[0])
+            {
+                std::ignore = std::stoi(std::wstring(&c));
+            }
+
+            for (const auto& c : parts[1])
+            {
+                std::ignore = std::stoi(std::wstring(&c));
+            }
+
+            data.width = std::stoi(parts[0]);
+            data.height = std::stoi(parts[1]);
+        }
+        catch (const std::exception&)
+        {
+            return std::nullopt;
+        }
+
+        if (!SUCCEEDED(CLSIDFromString(parts[2].c_str(), &data.virtualDesktopId)))
+        {
+            return std::nullopt;
+        }
+
+        if (parts.size() == 4)
+        {
+            data.monitorId = parts[3]; //could be empty
+        }
+
+        return data;
+    }
+    
+    bool DeviceIdData::IsValidDeviceId(const std::wstring& str)
+    {
+        std::wstring monitorName;
+        std::wstring temp;
+        std::vector<std::wstring> parts;
+        std::wstringstream wss(str);
+
+        /*
+        Important fix for device info that contains a '_' in the name:
+        1. first search for '#'
+        2. Then split the remaining string by '_'
+        */
+
+        // Step 1: parse the name until the #, then to the '_'
+        if (str.find(L'#') != std::string::npos)
+        {
+            std::getline(wss, temp, L'#');
+
+            monitorName = temp;
+
+            if (!std::getline(wss, temp, L'_'))
+            {
+                return false;
+            }
+
+            monitorName += L"#" + temp;
+            parts.push_back(monitorName);
+        }
+
+        // Step 2: parse the rest of the id
+        while (std::getline(wss, temp, L'_'))
+        {
+            parts.push_back(temp);
+        }
+
+        if (parts.size() != 4)
+        {
+            return false;
+        }
+
+        /*
+        Refer to FancyZonesUtils::GenerateUniqueId parts contain:
+        1. monitor id [string]
+        2. width of device [int]
+        3. height of device [int]
+        4. virtual desktop id (GUID) [string]
+        */
+        try
+        {
+            //check if resolution contain only digits
+            for (const auto& c : parts[1])
+            {
+                std::ignore = std::stoi(std::wstring(&c));
+            }
+            for (const auto& c : parts[2])
+            {
+                std::ignore = std::stoi(std::wstring(&c));
+            }
+        }
+        catch (const std::exception&)
+        {
+            return false;
+        }
+
+        if (!FancyZonesUtils::IsValidGuid(parts[3]) || parts[0].empty())
+        {
+            return false;
+        }
+
+        return true;
+    }
+}
+    
 namespace
 {
     json::JsonArray NumVecToJsonArray(const std::vector<int>& vec)
@@ -110,13 +279,16 @@ namespace
         }
 
         std::wstring deviceIdStr = json.GetNamedString(NonLocalizable::DeviceIdStr).c_str();
-        auto deviceId = FancyZonesDataTypes::DeviceIdData::ParseDeviceId(deviceIdStr);
+        auto deviceId = BackwardsCompatibility::DeviceIdData::ParseDeviceId(deviceIdStr);
         if (!deviceId.has_value())
         {
             return std::nullopt;
         }
 
-        data.deviceId = *deviceId;
+        data.deviceId = FancyZonesDataTypes::DeviceIdData{
+            .deviceName = deviceId->deviceName,
+            .virtualDesktopId = deviceId->virtualDesktopId
+        };
         data.zoneSetUuid = json.GetNamedString(NonLocalizable::ZoneSetUuidStr);
 
         if (!FancyZonesUtils::IsValidGuid(data.zoneSetUuid))
@@ -367,88 +539,6 @@ namespace JSONHelpers
         }
     }
 
-    json::JsonObject AppZoneHistoryJSON::ToJson(const AppZoneHistoryJSON& appZoneHistory)
-    {
-        json::JsonObject result{};
-
-        result.SetNamedValue(NonLocalizable::AppPathStr, json::value(appZoneHistory.appPath));
-
-        json::JsonArray appHistoryArray;
-        for (const auto& data : appZoneHistory.data)
-        {
-            json::JsonObject desktopData;
-            json::JsonArray jsonIndexSet;
-            for (ZoneIndex index : data.zoneIndexSet)
-            {
-                jsonIndexSet.Append(json::value(static_cast<int>(index)));
-            }
-
-            desktopData.SetNamedValue(NonLocalizable::ZoneIndexSetStr, jsonIndexSet);
-            desktopData.SetNamedValue(NonLocalizable::DeviceIdStr, json::value(data.deviceId.toString()));
-            desktopData.SetNamedValue(NonLocalizable::ZoneSetUuidStr, json::value(data.zoneSetUuid));
-
-            appHistoryArray.Append(desktopData);
-        }
-
-        result.SetNamedValue(NonLocalizable::HistoryStr, appHistoryArray);
-
-        return result;
-    }
-
-    std::optional<AppZoneHistoryJSON> AppZoneHistoryJSON::FromJson(const json::JsonObject& zoneSet)
-    {
-        try
-        {
-            AppZoneHistoryJSON result;
-
-            result.appPath = zoneSet.GetNamedString(NonLocalizable::AppPathStr);
-            if (zoneSet.HasKey(NonLocalizable::HistoryStr))
-            {
-                auto appHistoryArray = zoneSet.GetNamedArray(NonLocalizable::HistoryStr);
-                for (uint32_t i = 0; i < appHistoryArray.Size(); ++i)
-                {
-                    json::JsonObject json = appHistoryArray.GetObjectAt(i);
-                    if (auto data = ParseSingleAppZoneHistoryItem(json); data.has_value())
-                    {
-                        result.data.push_back(std::move(data.value()));
-                    }
-                }
-            }
-            else
-            {
-                // handle previous file format, with single desktop layout information per application
-                if (auto data = ParseSingleAppZoneHistoryItem(zoneSet); data.has_value())
-                {
-                    result.data.push_back(std::move(data.value()));
-                }
-            }
-            if (result.data.empty())
-            {
-                return std::nullopt;
-            }
-
-            return result;
-        }
-        catch (const winrt::hresult_error&)
-        {
-            return std::nullopt;
-        }
-    }
-
-    json::JsonObject DeviceInfoJSON::ToJson(const DeviceInfoJSON& device)
-    {
-        json::JsonObject result{};
-
-        result.SetNamedValue(NonLocalizable::DeviceIdStr, json::value(device.deviceId.toString()));
-        result.SetNamedValue(NonLocalizable::ActiveZoneSetStr, JSONHelpers::ZoneSetDataJSON::ToJson(device.data.activeZoneSet));
-        result.SetNamedValue(NonLocalizable::EditorShowSpacingStr, json::value(device.data.showSpacing));
-        result.SetNamedValue(NonLocalizable::EditorSpacingStr, json::value(device.data.spacing));
-        result.SetNamedValue(NonLocalizable::EditorZoneCountStr, json::value(device.data.zoneCount));
-        result.SetNamedValue(NonLocalizable::EditorSensitivityRadiusStr, json::value(device.data.sensitivityRadius));
-
-        return result;
-    }
-
     std::optional<DeviceInfoJSON> DeviceInfoJSON::FromJson(const json::JsonObject& device)
     {
         try
@@ -456,7 +546,7 @@ namespace JSONHelpers
             DeviceInfoJSON result;
 
             std::wstring deviceIdStr = device.GetNamedString(NonLocalizable::DeviceIdStr).c_str();
-            auto deviceId = FancyZonesDataTypes::DeviceIdData::ParseDeviceId(deviceIdStr);
+            auto deviceId = BackwardsCompatibility::DeviceIdData::ParseDeviceId(deviceIdStr);
             if (!deviceId.has_value())
             {
                 return std::nullopt;
@@ -522,8 +612,9 @@ namespace JSONHelpers
     {
         json::JsonObject result{};
 
+        result.SetNamedValue(NonLocalizable::MonitorNameId, json::value(monitor.monitorName));
+        result.SetNamedValue(NonLocalizable::VirtualDesktopId, json::value(monitor.virtualDesktop));
         result.SetNamedValue(NonLocalizable::Dpi, json::value(monitor.dpi));
-        result.SetNamedValue(NonLocalizable::MonitorId, json::value(monitor.id));
         result.SetNamedValue(NonLocalizable::TopCoordinate, json::value(monitor.top));
         result.SetNamedValue(NonLocalizable::LeftCoordinate, json::value(monitor.left));
         result.SetNamedValue(NonLocalizable::Width, json::value(monitor.width));
@@ -576,87 +667,7 @@ namespace JSONHelpers
         }
     }
 
-    void SaveZoneSettings(const std::wstring& zonesSettingsFileName, const TDeviceInfoMap& deviceInfoMap, const TCustomZoneSetsMap& customZoneSetsMap, const TLayoutQuickKeysMap& quickKeysMap)
-    {
-        auto before = json::from_file(zonesSettingsFileName);
-
-        json::JsonObject root{};
-        json::JsonArray templates{};
-
-        try
-        {
-            if (before.has_value() && before->HasKey(NonLocalizable::Templates))
-            {
-                templates = before->GetNamedArray(NonLocalizable::Templates);
-            }
-        }
-        catch (const winrt::hresult_error&)
-        {
-        
-        }
-               
-        root.SetNamedValue(NonLocalizable::DevicesStr, JSONHelpers::SerializeDeviceInfos(deviceInfoMap));
-        root.SetNamedValue(NonLocalizable::CustomZoneSetsStr, JSONHelpers::SerializeCustomZoneSets(customZoneSetsMap));
-        root.SetNamedValue(NonLocalizable::Templates, templates);
-        root.SetNamedValue(NonLocalizable::QuickLayoutKeys, JSONHelpers::SerializeQuickKeys(quickKeysMap));
-        
-        if (!before.has_value() || before.value().Stringify() != root.Stringify())
-        {
-            Trace::FancyZones::DataChanged();
-            json::to_file(zonesSettingsFileName, root);
-        }
-    }
-
-    void SaveAppZoneHistory(const std::wstring& appZoneHistoryFileName, const TAppZoneHistoryMap& appZoneHistoryMap)
-    {
-        json::JsonObject root{};
-
-        root.SetNamedValue(NonLocalizable::AppZoneHistoryStr, JSONHelpers::SerializeAppZoneHistory(appZoneHistoryMap));
-
-        auto before = json::from_file(appZoneHistoryFileName);
-        if (!before.has_value() || before.value().Stringify() != root.Stringify())
-        {
-            json::to_file(appZoneHistoryFileName, root);
-        }
-    }
-
-    TAppZoneHistoryMap ParseAppZoneHistory(const json::JsonObject& fancyZonesDataJSON)
-    {
-        try
-        {
-            TAppZoneHistoryMap appZoneHistoryMap{};
-            auto appLastZones = fancyZonesDataJSON.GetNamedArray(NonLocalizable::AppZoneHistoryStr);
-
-            for (uint32_t i = 0; i < appLastZones.Size(); ++i)
-            {
-                json::JsonObject appLastZone = appLastZones.GetObjectAt(i);
-                if (auto appZoneHistory = AppZoneHistoryJSON::FromJson(appLastZone); appZoneHistory.has_value())
-                {
-                    appZoneHistoryMap[appZoneHistory->appPath] = std::move(appZoneHistory->data);
-                }
-            }
-
-            return std::move(appZoneHistoryMap);
-        }
-        catch (const winrt::hresult_error&)
-        {
-            return {};
-        }
-    }
-
-    json::JsonArray SerializeAppZoneHistory(const TAppZoneHistoryMap& appZoneHistoryMap)
-    {
-        json::JsonArray appHistoryArray;
-
-        for (const auto& [appPath, appZoneHistoryData] : appZoneHistoryMap)
-        {
-            appHistoryArray.Append(AppZoneHistoryJSON::ToJson(AppZoneHistoryJSON{ appPath, appZoneHistoryData }));
-        }
-
-        return appHistoryArray;
-    }
-
-    TDeviceInfoMap ParseDeviceInfos(const json::JsonObject& fancyZonesDataJSON)
+    std::optional<TDeviceInfoMap> ParseDeviceInfos(const json::JsonObject& fancyZonesDataJSON)
     {
         try
         {
@@ -673,45 +684,46 @@ namespace JSONHelpers
 
             return std::move(deviceInfoMap);
         }
-        catch (const winrt::hresult_error&)
+        catch (const winrt::hresult_error& e)
         {
-            return {};
+            Logger::error(L"Parsing device info error: {}", e.message());
+            return std::nullopt;
         }
     }
 
-    json::JsonArray SerializeDeviceInfos(const TDeviceInfoMap& deviceInfoMap)
+    void SaveAppliedLayouts(const TDeviceInfoMap& deviceInfoMap)
     {
-        json::JsonArray DeviceInfosJSON{};
+        json::JsonObject root{};
+        json::JsonArray layoutsArray{};
 
-        for (const auto& [deviceID, deviceData] : deviceInfoMap)
+        for (const auto& [deviceID, data] : deviceInfoMap)
         {
-            DeviceInfosJSON.Append(DeviceInfoJSON::DeviceInfoJSON::ToJson(DeviceInfoJSON{ deviceID, deviceData }));
-        }
+            json::JsonObject layout{};
+            layout.SetNamedValue(NonLocalizable::AppliedLayoutsIds::UuidID, json::value(data.activeZoneSet.uuid));
+            layout.SetNamedValue(NonLocalizable::AppliedLayoutsIds::TypeID, json::value(FancyZonesDataTypes::TypeToString(data.activeZoneSet.type)));
+            layout.SetNamedValue(NonLocalizable::AppliedLayoutsIds::ShowSpacingID, json::value(data.showSpacing));
+            layout.SetNamedValue(NonLocalizable::AppliedLayoutsIds::SpacingID, json::value(data.spacing));
+            layout.SetNamedValue(NonLocalizable::AppliedLayoutsIds::ZoneCountID, json::value(data.zoneCount));
+            layout.SetNamedValue(NonLocalizable::AppliedLayoutsIds::SensitivityRadiusID, json::value(data.sensitivityRadius));
 
-        return DeviceInfosJSON;
-    }
+            json::JsonObject obj{};
+            json::JsonObject device{};
+            device.SetNamedValue(NonLocalizable::AppliedLayoutsIds::MonitorID, json::value(deviceID.deviceName));
 
-    TCustomZoneSetsMap ParseCustomZoneSets(const json::JsonObject& fancyZonesDataJSON)
-    {
-        try
-        {
-            TCustomZoneSetsMap customZoneSetsMap{};
-            auto customZoneSets = fancyZonesDataJSON.GetNamedArray(NonLocalizable::CustomZoneSetsStr);
-
-            for (uint32_t i = 0; i < customZoneSets.Size(); ++i)
+            auto virtualDesktopStr = FancyZonesUtils::GuidToString(deviceID.virtualDesktopId);
+            if (virtualDesktopStr)
             {
-                if (auto zoneSet = CustomZoneSetJSON::FromJson(customZoneSets.GetObjectAt(i)); zoneSet.has_value())
-                {
-                    customZoneSetsMap[zoneSet->uuid] = std::move(zoneSet->data);
-                }
+                device.SetNamedValue(NonLocalizable::AppliedLayoutsIds::VirtualDesktopID, json::value(virtualDesktopStr.value()));
             }
 
-            return std::move(customZoneSetsMap);
+            obj.SetNamedValue(NonLocalizable::AppliedLayoutsIds::DeviceID, device);
+            obj.SetNamedValue(NonLocalizable::AppliedLayoutsIds::AppliedLayoutID, layout);
+
+            layoutsArray.Append(obj);
         }
-        catch (const winrt::hresult_error&)
-        {
-            return {};
-        }
+
+        root.SetNamedValue(NonLocalizable::AppliedLayoutsIds::AppliedLayoutsArrayID, layoutsArray);
+        json::to_file(AppliedLayouts::AppliedLayoutsFileName(), root);
     }
 
     json::JsonArray SerializeCustomZoneSets(const TCustomZoneSetsMap& customZoneSetsMap)
@@ -726,7 +738,7 @@ namespace JSONHelpers
         return customZoneSetsJSON;
     }
     
-    TLayoutQuickKeysMap ParseQuickKeys(const json::JsonObject& fancyZonesDataJSON)
+    std::optional<TLayoutQuickKeysMap> ParseQuickKeys(const json::JsonObject& fancyZonesDataJSON)
     {
         try
         {
@@ -746,19 +758,86 @@ namespace JSONHelpers
         catch (const winrt::hresult_error& e)
         {
             Logger::error(L"Parsing quick keys error: {}", e.message());
-            return {};
+            return std::nullopt;
         }
     }
 
-    json::JsonArray SerializeQuickKeys(const TLayoutQuickKeysMap& quickKeysMap)
+    void SaveLayoutHotkeys(const TLayoutQuickKeysMap& quickKeysMap)
     {
-        json::JsonArray quickKeysJSON{};
+        json::JsonObject root{};
+        json::JsonArray keysArray{};
 
         for (const auto& [uuid, key] : quickKeysMap)
         {
-            quickKeysJSON.Append(LayoutQuickKeyJSON::ToJson(LayoutQuickKeyJSON{ uuid, key }));
+            json::JsonObject keyJson{};
+
+            keyJson.SetNamedValue(NonLocalizable::LayoutHotkeysIds::LayoutUuidID, json::value(uuid));
+            keyJson.SetNamedValue(NonLocalizable::LayoutHotkeysIds::KeyID, json::value(key));
+
+            keysArray.Append(keyJson);
         }
 
-        return quickKeysJSON;
+        root.SetNamedValue(NonLocalizable::LayoutHotkeysIds::LayoutHotkeysArrayID, keysArray);
+        json::to_file(LayoutHotkeys::LayoutHotkeysFileName(), root);
+    }
+
+    std::optional<json::JsonArray> ParseLayoutTemplates(const json::JsonObject& fancyZonesDataJSON)
+    {
+        try
+        {
+            return fancyZonesDataJSON.GetNamedArray(NonLocalizable::Templates);
+        }
+        catch (const winrt::hresult_error& e)
+        {
+            Logger::error(L"Parsing layout templates error: {}", e.message());
+        }
+
+        return std::nullopt;
+    }
+
+    void SaveLayoutTemplates(const json::JsonArray& templates)
+    {
+        json::JsonObject root{};
+        root.SetNamedValue(NonLocalizable::LayoutTemplatesIds::LayoutTemplatesArrayID, templates);
+        json::to_file(LayoutTemplates::LayoutTemplatesFileName(), root);
+    }
+
+    std::optional<TCustomZoneSetsMap> ParseCustomZoneSets(const json::JsonObject& fancyZonesDataJSON)
+    {
+        try
+        {
+            TCustomZoneSetsMap customZoneSetsMap{};
+            auto customZoneSets = fancyZonesDataJSON.GetNamedArray(NonLocalizable::CustomZoneSetsStr);
+
+            for (uint32_t i = 0; i < customZoneSets.Size(); ++i)
+            {
+                if (auto zoneSet = CustomZoneSetJSON::FromJson(customZoneSets.GetObjectAt(i)); zoneSet.has_value())
+                {
+                    customZoneSetsMap[zoneSet->uuid] = std::move(zoneSet->data);
+                }
+            }
+
+            return std::move(customZoneSetsMap);
+        }
+        catch (const winrt::hresult_error& e)
+        {
+            Logger::error(L"Parsing custom layouts error: {}", e.message());
+            return std::nullopt;
+        }
+    }
+
+    void SaveCustomLayouts(const TCustomZoneSetsMap& map)
+    {
+        json::JsonObject root{};
+        json::JsonArray layoutsArray{};
+
+        for (const auto& [uuid, data] : map)
+        {
+            json::JsonObject layoutJson{};
+            layoutsArray.Append(CustomZoneSetJSON::ToJson(CustomZoneSetJSON{ uuid, data }));
+        }
+
+        root.SetNamedValue(NonLocalizable::CustomLayoutsIds::CustomLayoutsArrayID, layoutsArray);
+        json::to_file(CustomLayouts::CustomLayoutsFileName(), root);
     }
 }

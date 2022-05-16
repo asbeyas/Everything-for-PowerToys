@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.PowerToys.Settings.UI.Controls"
-    xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters" 
+    xmlns:converters="using:CommunityToolkit.WinUI.UI.Converters" 
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d">
 
@@ -19,13 +19,7 @@
         <controls:SettingsPageControl.ModuleContent>
 
             <StackPanel Orientation="Vertical">
-                <muxc:InfoBar
-                    Severity="Warning"
-                    x:Uid="VideoConference_RunAsAdminRequired"
-                    IsOpen="True"
-                    IsTabStop="True"
-                    IsClosable="False"
-                    Visibility="{Binding Mode=OneWay, Path=IsElevated, Converter={StaticResource BoolToVisibilityConverter}}" />
+            
                 <controls:Setting x:Uid="VideoConference_Enable" IsEnabled="{ Binding Mode=OneWay, Path=IsElevated }">
                     <controls:Setting.Icon>
                         <BitmapIcon UriSource="ms-appx:///Assets/FluentIcons/FluentIconsVideoConferenceMute.png" ShowAsMonochrome="False" />
@@ -34,7 +28,14 @@
                         <ToggleSwitch IsOn="{Binding Mode=TwoWay, Path=IsEnabled}" x:Uid="ToggleSwitch"/>
                     </controls:Setting.ActionContent>
                 </controls:Setting>
-
+                <muxc:InfoBar
+                    Severity="Warning"
+                    x:Uid="VideoConference_RunAsAdminRequired"
+                    IsOpen="True"
+                    IsTabStop="True"
+                    IsClosable="False"
+                    Visibility="{Binding Mode=OneWay, Path=IsElevated, Converter={StaticResource BoolToVisibilityConverter}}" />
+                
                 <controls:SettingsGroup x:Uid="VideoConference_Shortcuts" IsEnabled="{Binding Mode=OneWay, Path=IsEnabled}">
                     <controls:Setting x:Uid="VideoConference_CameraAndMicrophoneMuteHotkeyControl_Header">
                         <controls:Setting.ActionContent>
@@ -123,7 +124,7 @@
                         <controls:SettingExpander.Header>
                             <controls:Setting x:Uid="VideoConference_ToolbarPosition" Icon="&#xEC12;">
                                 <controls:Setting.ActionContent>
-                                    <ComboBox MinWidth="{StaticResource SettingActionControlMinWidth}" SelectedIndex="{ Binding Mode=TwoWay, Path=ToolbarPostionIndex}">
+                                    <ComboBox MinWidth="{StaticResource SettingActionControlMinWidth}" SelectedIndex="{ Binding Mode=TwoWay, Path=ToolbarPositionIndex}">
                                         <ComboBoxItem x:Uid="VideoConference_ToolbarPosition_TopLeftCorner"/>
                                         <ComboBoxItem x:Uid="VideoConference_ToolbarPosition_TopCenter"/>
                                         <ComboBoxItem x:Uid="VideoConference_ToolbarPosition_TopRightCorner"/>

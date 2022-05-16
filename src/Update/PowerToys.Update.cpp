@@ -153,7 +153,7 @@ bool InstallNewVersionStage2(std::wstring installer_path, std::wstring_view inst
         sei.fMask = { SEE_MASK_FLAG_NO_UI | SEE_MASK_NOASYNC | SEE_MASK_NOCLOSEPROCESS | SEE_MASK_NO_CONSOLE };
         sei.lpFile = installer_path.c_str();
         sei.nShow = SW_SHOWNORMAL;
-        std::wstring parameters = L"/passive";
+        std::wstring parameters = L"/passive /norestart";
         sei.lpParameters = parameters.c_str();
 
         success = ShellExecuteExW(&sei) == TRUE;
@@ -169,13 +169,33 @@ bool InstallNewVersionStage2(std::wstring installer_path, std::wstring_view inst
         }
     }
 
+    for (const auto& entry : fs::directory_iterator(updating::get_pending_updates_path()))
+    {
+        auto entryPath = entry.path().wstring();
+        std::transform(entryPath.begin(), entryPath.end(), entryPath.begin(), ::towlower);
+
+        // Delete only .msi and .exe
+        if (entryPath.ends_with(L".msi") || entryPath.ends_with(L".exe"))
+        {
+            // Skipping current installer in case of failed update
+            if (installer_path.find(entryPath) != std::string::npos && !success)
+            {
+                continue;
+            }
+
+            std::error_code err;
+            fs::remove(entry, err);
+            if (err.value())
+            {
+                Logger::warn("Failed to delete file {}. {}", entry.path().string(), err.message());
+            }
+        }
+    }
+
     if (!success)
     {
         return false;
     }
-
-    std::error_code _;
-    fs::remove(installer_path, _);
 
     UpdateState::store([&](UpdateState& state) {
         state = {};

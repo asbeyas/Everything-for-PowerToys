@@ -3,6 +3,7 @@
 
 #include <common/display/dpi_aware.h>
 #include <common/utils/game_mode.h>
+#include <common/utils/excluded_apps.h>
 #include <common/utils/resources.h>
 #include <common/utils/winapi_error.h>
 #include <common/utils/process_path.h>
@@ -12,22 +13,7 @@
 namespace NonLocalizable
 {
     const static wchar_t* TOOL_WINDOW_CLASS_NAME = L"AlwaysOnTopWindow";
-}
-
-// TODO: move to common utils
-bool find_app_name_in_path(const std::wstring& where, const std::vector<std::wstring>& what)
-{
-    for (const auto& row : what)
-    {
-        const auto pos = where.rfind(row);
-        const auto last_slash = where.rfind('\\');
-        //Check that row occurs in where, and its last occurrence contains in itself the first character after the last backslash.
-        if (pos != std::wstring::npos && pos <= last_slash + 1 && pos + row.length() > last_slash)
-        {
-            return true;
-        }
-    }
-    return false;
+    const static wchar_t* WINDOW_IS_PINNED_PROP = L"AlwaysOnTop_Pinned";
 }
 
 bool isExcluded(HWND window)
@@ -103,7 +89,7 @@ void AlwaysOnTop::SettingsUpdate(SettingId id)
             {
                 if (!iter.second)
                 {
-                    AssignBorderTracker(iter.first);
+                    AssignBorder(iter.first);
                 }
             }
         }
@@ -119,7 +105,7 @@ void AlwaysOnTop::SettingsUpdate(SettingId id)
     case SettingId::ExcludeApps:
     {
         std::vector<HWND> toErase{};
-        for (const auto& [window, tracker] : m_topmostWindows)
+        for (const auto& [window, border] : m_topmostWindows)
         {
             if (isExcluded(window))
             {
@@ -187,14 +173,7 @@ void AlwaysOnTop::ProcessCommand(HWND window)
         if (PinTopmostWindow(window))
         {
             soundType = Sound::Type::On;
-            if (AlwaysOnTopSettings::settings().enableFrame)
-            {
-                AssignBorderTracker(window);
-            }
-            else
-            {
-                m_topmostWindows[window] = nullptr;
-            }
+            AssignBorder(window);
         }
     }
 
@@ -234,36 +213,28 @@ void AlwaysOnTop::StartTrackingTopmostWindows()
 
     for (HWND window : result)
     {
-        if (IsTopmost(window))
+        if (IsPinned(window))
         {
-            if (AlwaysOnTopSettings::settings().enableFrame)
-            {
-                AssignBorderTracker(window);
-            }
-            else
-            {
-                m_topmostWindows[window] = nullptr;
-            }
+            AssignBorder(window);
         }
     }
 }
 
-bool AlwaysOnTop::AssignBorderTracker(HWND window)
+bool AlwaysOnTop::AssignBorder(HWND window)
 {
-    auto tracker = std::make_unique<WindowBorder>(window);
-    if (!tracker->Init(m_hinstance))
+    if (m_virtualDesktopUtils.IsWindowOnCurrentDesktop(window) && AlwaysOnTopSettings::settings().enableFrame)
     {
-        // Failed to init tracker, reset topmost
-        UnpinTopmostWindow(window);
-        return false;
+        auto border = WindowBorder::Create(window, m_hinstance);
+        if (border)
+        {
+            m_topmostWindows[window] = std::move(border);
+        }
     }
-
-    if (m_virtualDesktopUtils.IsWindowOnCurrentDesktop(window))
+    else
     {
-        tracker->Show();
+        m_topmostWindows[window] = nullptr;
     }
-
-    m_topmostWindows[window] = std::move(tracker);
+    
     return true;
 }
 
@@ -278,9 +249,9 @@ void AlwaysOnTop::SubscribeToEvents()
     // subscribe to windows events
     std::array<DWORD, 5> events_to_subscribe = {
         EVENT_OBJECT_LOCATIONCHANGE,
+        EVENT_SYSTEM_MINIMIZESTART,
+        EVENT_SYSTEM_MINIMIZEEND,
         EVENT_SYSTEM_MOVESIZEEND,
-        EVENT_SYSTEM_SWITCHEND,
-        EVENT_OBJECT_DESTROY,
         EVENT_OBJECT_NAMECHANGE
     };
 
@@ -300,7 +271,7 @@ void AlwaysOnTop::SubscribeToEvents()
 
 void AlwaysOnTop::UnpinAll()
 {
-    for (const auto& [topWindow, tracker] : m_topmostWindows)
+    for (const auto& [topWindow, border] : m_topmostWindows)
     {
         if (!UnpinTopmostWindow(topWindow))
         {
@@ -329,14 +300,38 @@ bool AlwaysOnTop::IsTopmost(HWND window) const noexcept
     return (exStyle & WS_EX_TOPMOST) == WS_EX_TOPMOST;
 }
 
+bool AlwaysOnTop::IsPinned(HWND window) const noexcept
+{
+    auto handle = GetProp(window, NonLocalizable::WINDOW_IS_PINNED_PROP);
+    return (handle != NULL);
+}
+
 bool AlwaysOnTop::PinTopmostWindow(HWND window) const noexcept
 {
-    return SetWindowPos(window, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+    if (!SetProp(window, NonLocalizable::WINDOW_IS_PINNED_PROP, (HANDLE)1))
+    {
+        Logger::error(L"SetProp failed, {}", get_last_error_or_default(GetLastError()));
+    }
+
+    auto res = SetWindowPos(window, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+    if (!res)
+    {
+        Logger::error(L"Failed to pin window, {}", get_last_error_or_default(GetLastError()));
+    }
+
+    return res;
 }
 
 bool AlwaysOnTop::UnpinTopmostWindow(HWND window) const noexcept
 {
-    return SetWindowPos(window, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+    RemoveProp(window, NonLocalizable::WINDOW_IS_PINNED_PROP);
+    auto res = SetWindowPos(window, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+    if (!res)
+    {
+        Logger::error(L"Failed to unpin window, {}", get_last_error_or_default(GetLastError()));
+    }
+
+    return res;
 }
 
 bool AlwaysOnTop::IsTracked(HWND window) const noexcept
@@ -347,40 +342,74 @@ bool AlwaysOnTop::IsTracked(HWND window) const noexcept
 
 void AlwaysOnTop::HandleWinHookEvent(WinHookEvent* data) noexcept
 {
-    if (!AlwaysOnTopSettings::settings().enableFrame)
+    if (!AlwaysOnTopSettings::settings().enableFrame || !data->hwnd)
     {
         return;
+    }
+
+    // fix for the https://github.com/microsoft/PowerToys/issues/15300
+    // check if the window was closed, since for some EVENT_OBJECT_DESTROY doesn't work 
+    std::vector<HWND> toErase{};
+    for (const auto& [window, border] : m_topmostWindows)
+    {
+        bool visible = IsWindowVisible(window);
+        if (!visible)
+        {
+            UnpinTopmostWindow(window);
+            toErase.push_back(window);
+        }
+    }
+
+    for (const auto window : toErase)
+    {
+        m_topmostWindows.erase(window);
     }
 
     switch (data->event)
     {
     case EVENT_OBJECT_LOCATIONCHANGE:
+    {
+        auto iter = m_topmostWindows.find(data->hwnd);
+        if (iter != m_topmostWindows.end())
+        {
+            const auto& border = iter->second;
+            if (border)
+            {
+                border->UpdateBorderPosition();
+            }
+        }
+    }
+    break;
+    case EVENT_SYSTEM_MINIMIZESTART:
+    {
+        auto iter = m_topmostWindows.find(data->hwnd);
+        if (iter != m_topmostWindows.end())
+        {
+            m_topmostWindows[data->hwnd] = nullptr;
+        }
+    }
+    break;
+    case EVENT_SYSTEM_MINIMIZEEND:
+    {
+        auto iter = m_topmostWindows.find(data->hwnd);
+        if (iter != m_topmostWindows.end())
+        {
+            // pin border again, in some cases topmost flag stops working: https://github.com/microsoft/PowerToys/issues/17332
+            PinTopmostWindow(data->hwnd); 
+            AssignBorder(data->hwnd);
+        }
+    }
+    break;
     case EVENT_SYSTEM_MOVESIZEEND:
     {
         auto iter = m_topmostWindows.find(data->hwnd);
         if (iter != m_topmostWindows.end())
         {
-            const auto& tracker = iter->second;
-            tracker->UpdateBorderPosition();
-        }
-    }
-    break;
-    case EVENT_OBJECT_DESTROY:
-    {
-        auto iter = m_topmostWindows.find(data->hwnd);
-        if (iter != m_topmostWindows.end())
-        {
-            m_topmostWindows.erase(iter);
-        }
-    }
-    break;
-    case EVENT_SYSTEM_SWITCHEND:
-    {
-        auto iter = m_topmostWindows.find(data->hwnd);
-        if (iter != m_topmostWindows.end())
-        {
-            const auto& tracker = iter->second;
-            tracker->Hide();
+            const auto& border = iter->second;
+            if (border)
+            {
+                border->UpdateBorderPosition();
+            }
         }
     }
     break;
@@ -401,15 +430,15 @@ void AlwaysOnTop::HandleWinHookEvent(WinHookEvent* data) noexcept
 
 void AlwaysOnTop::VirtualDesktopSwitchedHandle()
 {
-    for (const auto& [window, tracker] : m_topmostWindows)
+    for (const auto& [window, border] : m_topmostWindows)
     {
         if (m_virtualDesktopUtils.IsWindowOnCurrentDesktop(window))
         {
-            tracker->Show();
+            AssignBorder(window);
         }
         else
         {
-            tracker->Hide();
+            m_topmostWindows[window] = nullptr;
         }
     }
 }

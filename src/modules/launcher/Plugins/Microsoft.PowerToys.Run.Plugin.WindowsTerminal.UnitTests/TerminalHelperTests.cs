@@ -5,10 +5,11 @@
 using System;
 using System.IO;
 using System.Text.Json;
+using Microsoft.PowerToys.Run.Plugin.WindowsTerminal;
 using Microsoft.PowerToys.Run.Plugin.WindowsTerminal.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Microsoft.PowerToys.Run.Plugin.WindowsTerminal.UnitTests
+namespace Microsoft.Plugin.WindowsTerminal.UnitTests
 {
     [TestClass]
     public class TerminalHelperTests
@@ -22,12 +23,14 @@ namespace Microsoft.PowerToys.Run.Plugin.WindowsTerminal.UnitTests
             Assert.AreEqual(arguments, expectedArguments);
         }
 
-        [TestMethod]
-        public void ParseSettingsTest()
+        [DataTestMethod]
+        [DataRow("settings 1.11.2421.0.json")]
+        [DataRow("settings 1.11.2421.0_2.json")]
+        public void ParseSettingsTest(string file)
         {
             var terminal = new TerminalPackage(string.Empty, new Version(), string.Empty, string.Empty, string.Empty);
 
-            var settingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "settings.json");
+            var settingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, file);
             var settings = File.ReadAllText(settingsPath);
             var profiles = TerminalHelper.ParseSettings(terminal, settings);
 

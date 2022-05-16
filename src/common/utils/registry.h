@@ -69,9 +69,10 @@ namespace registry
         std::wstring path;
         std::optional<std::wstring> name; // none == default
         value_t value;
+        bool required = true;
 
-        ValueChange(const HKEY scope, std::wstring path, std::optional<std::wstring> name, value_t value) :
-            scope{ scope }, path{ std::move(path) }, name{ std::move(name) }, value{ std::move(value) }
+        ValueChange(const HKEY scope, std::wstring path, std::optional<std::wstring> name, value_t value, bool required = true) :
+            scope{ scope }, path{ std::move(path) }, name{ std::move(name) }, value{ std::move(value) }, required{ required }
         {
         }
 
@@ -268,7 +269,7 @@ namespace registry
         {
             for (const auto& c : changes)
             {
-                if (!c.isApplied())
+                if (c.required && !c.isApplied())
                 {
                     return false;
                 }
@@ -281,7 +282,7 @@ namespace registry
             bool ok = true;
             for (const auto& c : changes)
             {
-                ok = c.apply() && ok;
+                ok = (c.apply()||!c.required) && ok;
             }
             return ok;
         }
@@ -291,7 +292,7 @@ namespace registry
             bool ok = true;
             for (const auto& c : changes)
             {
-                ok = c.unApply() && ok;
+                ok = (c.unApply()||!c.required) && ok;
             }
             return ok;
         }
@@ -317,7 +318,8 @@ namespace registry
                                                           std::wstring handlerCategory,
                                                           std::wstring className,
                                                           std::wstring displayName,
-                                                          std::wstring fileType)
+                                                          std::vector<std::wstring> fileTypes,
+                                                          std::wstring fileKindType = L"" )
         {
             const HKEY scope = perUser ? HKEY_CURRENT_USER : HKEY_LOCAL_MACHINE;
 
@@ -350,11 +352,6 @@ namespace registry
             versionPath += L'\\';
             versionPath += powertoysVersion;
 
-            std::wstring fileAssociationPath = L"Software\\Classes\\";
-            fileAssociationPath += fileType;
-            fileAssociationPath += L"\\shellex\\";
-            fileAssociationPath += handlerType == PreviewHandlerType::preview ? IPREVIEW_HANDLER_CLSID : ITHUMBNAIL_PROVIDER_CLSID;
-
             using vec_t = std::vector<registry::ValueChange>;
             // TODO: verify that we actually need all of those
             vec_t changes = { { scope, clsidPath, L"DisplayName", displayName },
@@ -365,8 +362,24 @@ namespace registry
                               { scope, inprocServerPath, L"Class", className },
                               { scope, inprocServerPath, L"ThreadingModel", L"Both" },
                               { scope, versionPath, L"Assembly", assemblyKeyValue },
-                              { scope, versionPath, L"Class", className },
-                              { scope, fileAssociationPath, std::nullopt, handlerClsid } };
+                              { scope, versionPath, L"Class", className } };
+
+            for (const auto& fileType : fileTypes)
+            {
+                std::wstring fileAssociationPath = L"Software\\Classes\\";
+                fileAssociationPath += fileType;
+                fileAssociationPath += L"\\shellex\\";
+                fileAssociationPath += handlerType == PreviewHandlerType::preview ? IPREVIEW_HANDLER_CLSID : ITHUMBNAIL_PROVIDER_CLSID;
+                changes.push_back({ scope, fileAssociationPath, std::nullopt, handlerClsid });
+                if (!fileKindType.empty())
+                {
+                    // Registering a file type as a kind needs to be done at the HKEY_LOCAL_MACHINE level.
+                    // Make it optional as well so that we don't fail registering the handler if we can't write to HKEY_LOCAL_MACHINE.
+                    std::wstring kindMapPath = L"Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\KindMap";
+                    changes.push_back({ HKEY_LOCAL_MACHINE, kindMapPath, fileType, fileKindType, false});
+                }
+            }
+
             if (handlerType == PreviewHandlerType::preview)
             {
                 const std::wstring previewHostClsid = L"{6d2b5079-2f0b-48dd-ab7f-97cec514d30b}";

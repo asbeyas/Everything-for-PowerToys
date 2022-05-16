@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ProjectGuid>{F7C8C0F1-5431-4347-89D0-8E5354F93CF2}</ProjectGuid>
+    <RootNamespace>Microsoft.PowerToys.ThumbnailHandler.Stl</RootNamespace>
+    <AssemblyName>PowerToys.StlThumbnailProvider</AssemblyName>
+    <AssemblyTitle>PowerToys.StlThumbnailProvider</AssemblyTitle>
+    <AssemblyDescription>PowerToys StlPreviewHandler</AssemblyDescription>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <EnableComHosting>true</EnableComHosting>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Description>PowerToys StlPreviewHandler</Description>
+    <OutputPath>$(SolutionDir)$(Platform)\$(Configuration)\modules\FileExplorerPreview\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <UseWPF>true</UseWPF>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <Import Project="..\..\..\Version.props" />
+
+  <ItemGroup>
+    <PackageReference Include="HelixToolkit" Version="2.20.2" />
+    <PackageReference Include="HelixToolkit.Core.Wpf" Version="2.20.2" />
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\codeAnalysis\GlobalSuppressions.cs" Link="GlobalSuppressions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\common\ManagedTelemetry\Telemetry\ManagedTelemetry.csproj" />
+    <ProjectReference Include="..\Common\PreviewHandlerCommon.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="..\..\..\codeAnalysis\StyleCop.json">
+      <Link>StyleCop.json</Link>
+    </AdditionalFiles>
+  </ItemGroup>
+</Project>

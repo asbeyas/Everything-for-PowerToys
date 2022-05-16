@@ -4,7 +4,7 @@
 #include <common/display/dpi_aware.h>
 #include <common/utils/logger_helper.h>
 #include <common/utils/resources.h>
-#include <common/utils/UnhandledExceptionHandler_x64.h>
+#include <common/utils/UnhandledExceptionHandler.h>
 
 #include <FancyZonesLib/Generated Files/resource.h>
 #include <FancyZonesLib/FancyZonesData.h>
@@ -16,12 +16,9 @@
 FancyZonesApp::FancyZonesApp(const std::wstring& appName, const std::wstring& appKey)
 {
     DPIAware::EnableDPIAwarenessForThisProcess();
-
-    m_settings = MakeFancyZonesSettings(reinterpret_cast<HINSTANCE>(&__ImageBase), appName.c_str(), appKey.c_str());
-    FancyZonesDataInstance().LoadFancyZonesData();
-
+        
     InitializeWinhookEventIds();
-    m_app = MakeFancyZones(reinterpret_cast<HINSTANCE>(&__ImageBase), m_settings, std::bind(&FancyZonesApp::DisableModule, this));
+    m_app = MakeFancyZones(reinterpret_cast<HINSTANCE>(&__ImageBase), std::bind(&FancyZonesApp::DisableModule, this));
 
     InitHooks();
 

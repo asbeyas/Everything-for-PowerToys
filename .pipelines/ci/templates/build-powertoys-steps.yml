@@ -7,12 +7,14 @@ steps:
   submodules: true
   clean: true
 
-- task: NuGetToolInstaller@0
-  displayName: Ensure NuGet 5.8.0
+- task: UseDotNet@2
+  displayName: 'Use .NET 6 SDK'
   inputs:
-    versionSpec: 5.8.0
+    packageType: sdk
+    version: '6.x'
 
-#- template: .\..\..\..\restore-dependencies.yml
+- task: NuGetToolInstaller@1
+  displayName: Ensure NuGet Installer
 
 - task: VisualStudioTestPlatformInstaller@1
   displayName: Ensure VSTest Platform
@@ -30,7 +32,7 @@ steps:
   displayName: 'Build PowerToys.sln'
   inputs:
     solution: '**\PowerToys.sln'
-    vsVersion: 16.0
+    vsVersion: 17.0
     platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
     msbuildArgs: ${{ parameters.additionalBuildArguments }}
@@ -49,7 +51,7 @@ steps:
   displayName: 'Build BugReportTool.sln'
   inputs:
     solution: '**\BugReportTool.sln'
-    vsVersion: 16.0
+    vsVersion: 17.0
     platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
     msbuildArgs: ${{ parameters.additionalBuildArguments }}
@@ -68,7 +70,26 @@ steps:
   displayName: 'Build WebcamReportTool.sln'
   inputs:
     solution: '**\WebcamReportTool.sln'
-    vsVersion: 16.0
+    vsVersion: 17.0
+    platform: '$(BuildPlatform)'
+    configuration: '$(BuildConfiguration)'
+    msbuildArgs: ${{ parameters.additionalBuildArguments }}
+    maximumCpuCount: true
+
+- task: NuGetCommand@2
+  displayName: Restore NuGet packages for StylesReportTool.sln
+  inputs:
+    command: restore
+    feedsToUse: config
+    configPath: NuGet.config
+    restoreSolution: tools\StylesReportTool\StylesReportTool.sln
+    restoreDirectory: '$(Build.SourcesDirectory)\tools\StylesReportTool\packages'
+
+- task: VSBuild@1
+  displayName: 'Build StylesReportTool.sln'
+  inputs:
+    solution: '**\StylesReportTool.sln'
+    vsVersion: 17.0
     platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
     msbuildArgs: ${{ parameters.additionalBuildArguments }}
@@ -84,13 +105,24 @@ steps:
     restoreDirectory: '$(Build.SourcesDirectory)\installer\packages'
 
 - task: VSBuild@1
-  displayName: 'Build PowerToysSetup.sln'
+  displayName: 'Build PowerToys MSI'
   inputs:
     solution: '**\installer\PowerToysSetup.sln'
-    vsVersion: 16.0
+    vsVersion: 17.0
     platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
-    msbuildArgs: ${{ parameters.additionalBuildArguments }}
+    msbuildArgs: /t:PowerToysInstaller ${{ parameters.additionalBuildArguments }}
+    maximumCpuCount: true
+
+- task: VSBuild@1
+  displayName: 'Build PowerToys Bootstrapper'
+  inputs:
+    solution: '**\installer\PowerToysSetup.sln'
+    vsVersion: 17.0
+    platform: '$(BuildPlatform)'
+    configuration: '$(BuildConfiguration)'
+    msbuildArgs: /t:PowerToysBootstrapper ${{ parameters.additionalBuildArguments }}
+    clean: false
     maximumCpuCount: true
 
 # directly not doing WinAppDriver testing
@@ -103,6 +135,7 @@ steps:
     testAssemblyVer2: |
       **\UnitTests-GcodeThumbnailProvider.dll
       **\UnitTests-SvgThumbnailProvider.dll
+      **\UnitTests-StlThumbnailProvider.dll
       **\UnitTests-PdfThumbnailProvider.dll
       **\Settings.UI.UnitTests.dll
       **\UnitTests-MarkdownPreviewHandler.dll
@@ -121,9 +154,12 @@ steps:
       **\Microsoft.PowerToys.Run.Plugin.Calculator.UnitTest.dll
       **\Microsoft.Plugin.Uri.UnitTests.dll
       **\Wox.Test.dll
-      **\Microsoft.PowerToys.Run.Plugin.System.UnitTests.dll     
-      **\Microsoft.PowerToys.Run.Plugin.WindowsTerminal.UnitTests.dll
+      **\Microsoft.PowerToys.Run.Plugin.System.UnitTests.dll
+      **\Microsoft.PowerToys.Run.Plugin.TimeDate.UnitTests.dll      
+      **\Microsoft.Plugin.WindowsTerminal.UnitTests.dll
+      **\Microsoft.Plugin.WindowWalker.UnitTests.dll
       !**\obj\**
+      !**\ref\**
 
 # Native dlls
 - task: VSTest@2

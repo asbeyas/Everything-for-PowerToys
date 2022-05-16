@@ -7,7 +7,6 @@
                 "*.resources.dll",
 
                 "PowerToysSetupCustomActions.dll",
-
                 
                 "PowerToys.ActionRunner.exe",
                 "PowerToys.Update.exe",
@@ -16,14 +15,18 @@
                 "os-detection.dll",
                 "PowerToys.exe",
                 "PowerToys.Interop.dll",
-                "BugReportTool\\BugReportTool.exe",
-                "WebcamReportTool\\WebcamReportTool.exe",
+                "BugReportTool\\PowerToys.BugReportTool.exe",
+                "WebcamReportTool\\PowerToys.WebcamReportTool.exe",
+                "StylesReportTool\\PowerToys.StylesReportTool.exe",
                 "Telemetry.dll",
                 "PowerToys.ManagedTelemetry.dll",
                 "PowerToys.ManagedCommon.dll",
                 "PowerToys.Common.UI.dll",
                 "PowerToys.Settings.UI.Lib.dll",
 
+                "modules\\AlwaysOnTop\\PowerToys.AlwaysOnTop.exe",
+                "modules\\AlwaysOnTop\\PowerToys.AlwaysOnTopModuleInterface.dll",
+                
                 "modules\\ColorPicker\\ColorPicker.dll",
                 "modules\\ColorPicker\\ColorPickerUI.dll",
                 "modules\\ColorPicker\\ColorPickerUI.exe",
@@ -31,9 +34,6 @@
                 "modules\\ColorPicker\\PowerToys.ColorPicker.dll",
                 "modules\\ColorPicker\\PowerToys.ColorPickerUI.dll",
                 "modules\\ColorPicker\\PowerToys.ColorPickerUI.exe",
-
-                "modules\\AlwaysOnTop\\PowerToys.AlwaysOnTop.exe",
-                "modules\\AlwaysOnTop\\PowerToys.AlwaysOnTopModuleInterface.dll",
 
                 "modules\\Awake\\PowerToys.AwakeModuleInterface.dll",
                 "modules\\Awake\\PowerToys.Awake.exe",
@@ -52,12 +52,16 @@
                 "modules\\FileExplorerPreview\\PowerToys.ManagedTelemetry.dll",
                 "modules\\FileExplorerPreview\\PowerToys.MarkdownPreviewHandler.dll",
                 "modules\\FileExplorerPreview\\PowerToys.MarkdownPreviewHandler.comhost.dll",
+                "modules\\FileExplorerPreview\\PowerToys.MonacoPreviewHandler.dll",
+                "modules\\FileExplorerPreview\\PowerToys.MonacoPreviewHandler.comhost.dll",
                 "modules\\FileExplorerPreview\\PowerToys.PdfPreviewHandler.dll",
                 "modules\\FileExplorerPreview\\PowerToys.PdfPreviewHandler.comhost.dll",
                 "modules\\FileExplorerPreview\\PowerToys.PdfThumbnailProvider.dll",
                 "modules\\FileExplorerPreview\\PowerToys.PdfThumbnailProvider.comhost.dll",
                 "modules\\FileExplorerPreview\\PowerToys.powerpreview.dll",
                 "modules\\FileExplorerPreview\\PowerToys.PreviewHandlerCommon.dll",
+                "modules\\FileExplorerPreview\\PowerToys.StlThumbnailProvider.dll",
+                "modules\\FileExplorerPreview\\PowerToys.StlThumbnailProvider.comhost.dll",
                 "modules\\FileExplorerPreview\\PowerToys.SvgPreviewHandler.dll",
                 "modules\\FileExplorerPreview\\PowerToys.SvgPreviewHandler.comhost.dll",
                 "modules\\FileExplorerPreview\\PowerToys.SvgThumbnailProvider.dll",
@@ -91,14 +95,16 @@
                 "modules\\launcher\\Plugins\\VSCodeWorkspaces\\Community.PowerToys.Run.Plugin.VSCodeWorkspaces.dll",
                 "modules\\launcher\\Plugins\\Service\\Microsoft.PowerToys.Run.Plugin.Service.dll",
                 "modules\\launcher\\Plugins\\System\\Microsoft.PowerToys.Run.Plugin.System.dll",
+                "modules\\launcher\\Plugins\\TimeDate\\Microsoft.PowerToys.Run.Plugin.TimeDate.dll",
+                "modules\\launcher\\Plugins\\TimeZone\\Microsoft.PowerToys.Run.Plugin.TimeZone.dll",
                 "modules\\launcher\\Plugins\\WebSearch\\Community.PowerToys.Run.Plugin.WebSearch.dll",
                 "modules\\launcher\\Plugins\\WindowsTerminal\\Microsoft.PowerToys.Run.Plugin.WindowsTerminal.dll",
                 
                 "modules\\MouseUtils\\PowerToys.FindMyMouse.dll",
                 "modules\\MouseUtils\\PowerToys.MouseHighlighter.dll",
+                "modules\\MouseUtils\\PowerToys.MousePointerCrosshairs.dll",
 
                 "modules\\PowerRename\\PowerToys.PowerRenameExt.dll",
-                "modules\\PowerRename\\PowerToys.PowerRenameUILib.dll",
                 "modules\\PowerRename\\PowerToys.PowerRename.exe",
 
                 "modules\\ShortcutGuide\\ShortcutGuide\\PowerToys.ShortcutGuide.exe",
@@ -108,7 +114,6 @@
                 "modules\\VideoConference\\PowerToys.VideoConferenceProxyFilter_x86.dll",
                 "modules\\VideoConference\\PowerToys.VideoConferenceProxyFilter_x64.dll",
 
-                "Settings\\PowerToys.Settings.UI.exe",
                 "Settings\\PowerToys.Settings.dll",
                 "Settings\\PowerToys.Settings.exe"
             ],
@@ -154,7 +159,6 @@
         },
         {
             "MatchedPath": [
-                "Microsoft.Search.Interop.dll",
                 "ModernWpf.dll",
                 "ModernWpf.Controls.dll", 
                 "System.IO.Abstractions.dll", 
@@ -165,9 +169,10 @@
                 "NLog.dll",
                 "HtmlAgilityPack.dll",
                 "Markdig.Signed.dll",
+                "HelixToolkit.dll",
+                "HelixToolkit.Core.Wpf.dll",
                 "Mages.Core.dll",
                 "JetBrains.Annotations.dll",
-                "ICSharpCode.SharpZipLib.dll",
                 "NLog.Extensions.Logging.dll", 
                 "concrt140_app.dll",
                 "msvcp140_1_app.dll",
@@ -178,6 +183,15 @@
                 "vcomp140_app.dll",
                 "vcruntime140_1_app.dll",
                 "vcruntime140_app.dll", 
+                "modules\\FileExplorerPreview\\Microsoft.Web.WebView2.Core.dll",
+                "modules\\FileExplorerPreview\\Microsoft.Web.WebView2.WinForms.dll",
+                "modules\\FileExplorerPreview\\Microsoft.Web.WebView2.Wpf.dll",
+                "modules\\FileExplorerPreview\\runtimes\\win-x64\\native\\WebView2Loader.dll",
+                "modules\\launcher\\e_sqlite3.dll",
+                "modules\\launcher\\SQLitePCLRaw.batteries_v2.dll",
+                "modules\\launcher\\SQLitePCLRaw.core.dll",
+                "modules\\launcher\\SQLitePCLRaw.provider.e_sqlite3.dll",
+                "Settings\\Microsoft.Graphics.Canvas.Interop.dll",
                 "ColorCode.Core.dll", 
                 "ColorCode.UWP.dll",
                 "UnitsNet.dll"

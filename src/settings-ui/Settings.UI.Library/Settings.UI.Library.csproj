@@ -3,32 +3,21 @@
   <Import Project="..\..\Version.props" />
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <Platforms>x64</Platforms>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <Version>$(Version).0</Version>
     <Authors>Microsoft Corporation</Authors>
     <Product>PowerToys</Product>
     <Description>PowerToys Settings UI Library</Description>
-    <Copyright>Copyright (C) 2020 Microsoft Corporation</Copyright>
-    <RepositoryUrl>https://github.com/microsoft/PowerToys</RepositoryUrl>
-    <RepositoryType>Github</RepositoryType>
-    <PackageTags>PowerToys</PackageTags>
-    <NeutralLanguage>en-US</NeutralLanguage>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AssemblyName>PowerToys.Settings.UI.Lib</AssemblyName>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <PlatformTarget>x64</PlatformTarget>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
-
+ 
   <ItemGroup>
     <AdditionalFiles Include="..\..\codeAnalysis\StyleCop.json" Link="StyleCop.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
@@ -45,11 +34,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="System.IO.Abstractions" Version="12.2.5" />
-    <PackageReference Include="System.Text.Json" Version="5.0.2" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers">
-      <Version>3.3.0</Version>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    <PackageReference Include="System.Text.Json" Version="6.0.2" />
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
 

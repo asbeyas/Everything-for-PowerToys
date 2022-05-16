@@ -202,7 +202,7 @@
   <data name="VideoConference_Shortcuts.Header" xml:space="preserve">
     <value>Shortcuts</value>
   </data>
-  <data name="VideoConference_CameraOverlayImageAlt.AutomationProperties.Name" xml:space="preserve">
+  <data name="VideoConference_CameraOverlayImageAlt.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Camera overlay image preview</value>
   </data>
   <data name="VideoConference_CameraOverlayImageBrowse.Content" xml:space="preserve">
@@ -273,10 +273,7 @@
   </data>
   <data name="KeyboardManager_EnableToggle.Header" xml:space="preserve">
     <value>Enable Keyboard Manager</value>
-    <comment>
-      Keyboard Manager enable toggle header
-      do not loc the Product name.  Do you want this feature on / off
-    </comment>
+    <comment>Keyboard Manager enable toggle header. Do not loc the Product name. Do you want this feature on / off</comment>
   </data>
   <data name="KeyboardManager_ProfileDescription.Text" xml:space="preserve">
     <value>Select the profile to display the active key remap and shortcuts</value>
@@ -286,7 +283,7 @@
     <value>Remap a key</value>
     <comment>Keyboard Manager remap keyboard button content</comment>
   </data>
-  <data name="KeyboardManager_RemapKeyboardButton_Accessible.AutomationProperties.Name" xml:space="preserve">
+  <data name="KeyboardManager_RemapKeyboardButton_Accessible.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Remap a key</value>
     <comment>Keyboard Manager remap keyboard button content</comment>
   </data>
@@ -298,7 +295,7 @@
     <value>Remap a shortcut</value>
     <comment>Keyboard Manager remap shortcuts button</comment>
   </data>
-  <data name="KeyboardManager_RemapShortcutsButton_Accessible.AutomationProperties.Name" xml:space="preserve">
+  <data name="KeyboardManager_RemapShortcutsButton_Accessible.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Remap a shortcut</value>
     <comment>Keyboard Manager remap shortcuts button</comment>
   </data>
@@ -312,30 +309,30 @@
   <data name="Shortcut.Header" xml:space="preserve">
     <value>Shortcut</value>
   </data>
-  <data name="RemapKeysList.AutomationProperties.Name" xml:space="preserve">
+  <data name="RemapKeysList.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Current Key Remappings</value>
   </data>
-  <data name="RemapShortcutsList.AutomationProperties.Name" xml:space="preserve">
+  <data name="RemapShortcutsList.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Current Shortcut Remappings</value>
   </data>
-  <data name="KeyboardManager_RemappedKeysListItem.AutomationProperties.Name" xml:space="preserve">
+  <data name="KeyboardManager_RemappedKeysListItem.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Key Remapping</value>
     <comment>key as in keyboard key</comment>
   </data>
-  <data name="KeyboardManager_RemappedShortcutsListItem.AutomationProperties.Name" xml:space="preserve">
+  <data name="KeyboardManager_RemappedShortcutsListItem.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Shortcut Remapping</value>
   </data>
-  <data name="KeyboardManager_RemappedTo.AutomationProperties.Name" xml:space="preserve">
+  <data name="KeyboardManager_RemappedTo.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Remapped to</value>
   </data>
-  <data name="KeyboardManager_ShortcutRemappedTo.AutomationProperties.Name" xml:space="preserve">
+  <data name="KeyboardManager_ShortcutRemappedTo.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Remapped to</value>
   </data>
-  <data name="KeyboardManager_TargetApp.AutomationProperties.Name" xml:space="preserve">
+  <data name="KeyboardManager_TargetApp.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>For Target Application</value>
     <comment>What computer application would this be for</comment>
   </data>
-  <data name="KeyboardManager_Image.AutomationProperties.Name" xml:space="preserve">
+  <data name="KeyboardManager_Image.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Keyboard Manager</value>
     <comment>do not loc, product name</comment>
   </data>
@@ -424,7 +421,7 @@
   <data name="Appearance_GroupSettings.Text" xml:space="preserve">
     <value>Appearance</value>
   </data>
-  <data name="Fancyzones_ImageHyperlinkToDocs.AutomationProperties.Name" xml:space="preserve">
+  <data name="Fancyzones_ImageHyperlinkToDocs.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>FancyZones windows</value>
     <comment>do not loc the Product name</comment>
   </data>
@@ -471,17 +468,17 @@
   <data name="FancyZones_HotkeyPrevTabControl.Description" xml:space="preserve">
     <value>Shortcut for switching to the previous window in the current zone</value>
   </data>
-  <data name="SettingsPage_SetShortcut.AutomationProperties.Name" xml:space="preserve">
+  <data name="SettingsPage_SetShortcut.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Shortcut setting</value>
   </data>
-  <data name="SettingsPage_SetShortcut_Glyph.AutomationProperties.Name" xml:space="preserve">
+  <data name="SettingsPage_SetShortcut_Glyph.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Information Symbol</value>
   </data>
   <data name="FancyZones_LaunchEditorButtonControl.Header" xml:space="preserve">
     <value>Launch layout editor</value>
     <comment>launches the FancyZones layout editor application</comment>
   </data>
-  <data name="FancyZones_LaunchEditorButton_Accessible.AutomationProperties.Name" xml:space="preserve">
+  <data name="FancyZones_LaunchEditorButton_Accessible.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Launch layout editor</value>
     <comment>launches the FancyZones layout editor application</comment>
   </data>
@@ -617,24 +614,60 @@
     <value>Show recently used strings</value>
   </data>
   <data name="FileExplorerPreview_ToggleSwitch_Preview_MD.Header" xml:space="preserve">
-    <value>Enable Markdown (.md) preview</value>
-    <comment>Do not loc "Markdown".  Do you want this feature on / off</comment>
+    <value>Markdown</value>
+    <comment>File type, do not translate</comment>
+  </data>
+  <data name="FileExplorerPreview_ToggleSwitch_Preview_MD.Description" xml:space="preserve">
+    <value>.md, .markdown, .mdown, .mkdn, .mkd, .mdwn, .mdtxt, .mdtext</value>
+    <comment>File extensions, should not be altered</comment>
+  </data>
+  <data name="FileExplorerPreview_ToggleSwitch_Preview_Monaco.Header" xml:space="preserve">
+    <value>Source code files (Monaco)</value>
+    <comment>File type, do not translate</comment>
+  </data>
+  <data name="FileExplorerPreview_ToggleSwitch_Preview_Monaco.Description" xml:space="preserve">
+    <value>.cpp, .py, .json, .xml, .csproj, ...</value>
+    <comment>File extensions should not be altered</comment>
   </data>
   <data name="FileExplorerPreview_ToggleSwitch_Preview_SVG.Header" xml:space="preserve">
-    <value>Enable SVG (.svg) preview</value>
-    <comment>Do you want this feature on / off</comment>
+    <value>Scalable Vector Graphics</value>
+    <comment>File type, do not translate</comment>
+  </data>
+  <data name="FileExplorerPreview_ToggleSwitch_Preview_SVG.Description" xml:space="preserve">
+    <value>.svg</value>
+    <comment>File extension, should not be altered</comment>
   </data>
   <data name="FileExplorerPreview_ToggleSwitch_Preview_PDF.Header" xml:space="preserve">
-    <value>Enable PDF (.pdf) preview</value>
-    <comment>Do you want this feature on / off</comment>
+    <value>Portable Document Format</value>
+    <comment>File type, do not translate</comment>
   </data>
-  <data name="FileExplorerPreview_ToggleSwitch_SVG_Thumbnail.Header" xml:space="preserve">
-    <value>Enable SVG (.svg) thumbnails</value>
-    <comment>Do you want this feature on / off</comment>
+  <data name="FileExplorerPreview_ToggleSwitch_Preview_PDF.Description" xml:space="preserve">
+    <value>.pdf</value>
+    <comment>File extension, should not be altered</comment>
   </data>
-  <data name="FileExplorerPreview_ToggleSwitch_PDF_Thumbnail.Header" xml:space="preserve">
-    <value>Enable PDF (.pdf) thumbnails</value>
-    <comment>Do you want this feature on / off</comment>
+  <data name="FileExplorerPreview_ToggleSwitch_Thumbnail_SVG.Header" xml:space="preserve">
+    <value>Scalable Vector Graphics</value>
+    <comment>File type, do not translate</comment>
+  </data>
+  <data name="FileExplorerPreview_ToggleSwitch_Thumbnail_SVG.Description" xml:space="preserve">
+    <value>.svg</value>
+    <comment>File extension, should not be altered</comment>
+  </data>
+  <data name="FileExplorerPreview_ToggleSwitch_Thumbnail_STL.Header" xml:space="preserve">
+    <value>Stereolithography</value>
+    <comment>File type, do not translate</comment>
+  </data>
+  <data name="FileExplorerPreview_ToggleSwitch_Thumbnail_STL.Description" xml:space="preserve">
+    <value>.stl</value>
+    <comment>File extension, should not be altered</comment>
+  </data>
+  <data name="FileExplorerPreview_ToggleSwitch_Thumbnail_PDF.Header" xml:space="preserve">
+    <value>Portable Document Format</value>
+    <comment>File type, do not translate</comment>
+  </data>
+  <data name="FileExplorerPreview_ToggleSwitch_Thumbnail_PDF.Description" xml:space="preserve">
+    <value>.pdf</value>
+    <comment>File extension, should not be altered</comment>
   </data>
   <data name="FileExplorerPreview.ModuleDescription" xml:space="preserve">
     <value>These settings allow you to manage your Windows File Explorer custom preview handlers.</value>
@@ -718,10 +751,10 @@
     <value>Enable Image Resizer</value>
     <comment>do not loc the Product name.  Do you want this feature on / off</comment>
   </data>
-  <data name="ImagesSizesListView.AutomationProperties.Name" xml:space="preserve">
+  <data name="ImagesSizesListView.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Image Size</value>
   </data>
-  <data name="ImageResizer_Configurations.AutomationProperties.Name" xml:space="preserve">
+  <data name="ImageResizer_Configurations.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Configurations</value>
   </data>
   <data name="ImageResizer_Name.Header" xml:space="preserve">
@@ -739,11 +772,11 @@
   <data name="ImageResizer_Size.Header" xml:space="preserve">
     <value>Unit</value>
   </data>
-  <data name="RemoveButton.AutomationProperties.Name" xml:space="preserve">
+  <data name="RemoveButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Remove</value>
     <comment>Removes a user defined setting group for Image Resizer</comment>
   </data>
-  <data name="ImageResizer_Image.AutomationProperties.Name" xml:space="preserve">
+  <data name="ImageResizer_Image.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Image Resizer</value>
   </data>
   <data name="ImageResizer_AddSizeButton.Content" xml:space="preserve">
@@ -873,7 +906,7 @@
   <data name="FileExplorerPreview.ModuleTitle" xml:space="preserve">
     <value>File Explorer</value>
   </data>
-  <data name="FileExplorerPreview_Image.AutomationProperties.Name" xml:space="preserve">
+  <data name="FileExplorerPreview_Image.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>File Explorer</value>
     <comment>Use same translation as Windows does for File Explorer</comment>
   </data>
@@ -889,21 +922,21 @@
   <data name="PowerLauncher.ModuleTitle" xml:space="preserve">
     <value>PowerToys Run</value>
   </data>
-  <data name="PowerToys_Run_Image.AutomationProperties.Name" xml:space="preserve">
+  <data name="PowerToys_Run_Image.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>PowerToys Run</value>
   </data>
   <data name="PowerRename.ModuleTitle" xml:space="preserve">
     <value>PowerRename</value>
     <comment>do not loc the product name</comment>
   </data>
-  <data name="PowerRename_Image.AutomationProperties.Name" xml:space="preserve">
+  <data name="PowerRename_Image.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>PowerRename</value>
     <comment>do not loc</comment>
   </data>
   <data name="ShortcutGuide.ModuleTitle" xml:space="preserve">
     <value>Shortcut Guide</value>
   </data>
-  <data name="Shortcut_Guide_Image.AutomationProperties.Name" xml:space="preserve">
+  <data name="Shortcut_Guide_Image.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Shortcut Guide</value>
   </data>
   <data name="General_Repository.Text" xml:space="preserve">
@@ -915,7 +948,7 @@
   <data name="General_VersionLastChecked.Text" xml:space="preserve">
     <value>Last checked: </value>
   </data>
-  <data name="General_Version.AutomationProperties.Name" xml:space="preserve">
+  <data name="General_Version.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Version</value>
   </data>
   <data name="Admin_mode.Header" xml:space="preserve">
@@ -994,13 +1027,16 @@ Made with 💗 by Microsoft and the PowerToys community.</value>
     <value>PowerToys is up to date.</value>
   </data>
   <data name="FileExplorerPreview_IconThumbnail_GroupSettings.Header" xml:space="preserve">
-    <value>Icon Preview</value>
+    <value>Thumbnail icon Preview</value>
+  </data>
+  <data name="FileExplorerPreview_IconThumbnail_GroupSettings.Description" xml:space="preserve">
+    <value>Select the file types for which thumbnail previews must be rendered.</value>
   </data>
   <data name="FileExplorerPreview_PreviewPane.Header" xml:space="preserve">
     <value>Preview Pane</value>
   </data>
   <data name="FileExplorerPreview_PreviewPane.Description" xml:space="preserve">
-    <value>Ensure that Preview Pane is open by toggling the view with Alt + P in File Explorer.</value>
+    <value>Select the file types which must be rendered in the Preview Pane. Ensure that Preview Pane is open by toggling the view with Alt + P in File Explorer.</value>
     <comment>Preview Pane and File Explorer are app/feature names in Windows. 'Alt + P' is a shortcut</comment>
   </data>
   <data name="FileExplorerPreview_RunAsAdminRequired.Title" xml:space="preserve">
@@ -1009,6 +1045,14 @@ Made with 💗 by Microsoft and the PowerToys community.</value>
   <data name="FileExplorerPreview_RebootRequired.Title" xml:space="preserve">
     <value>A reboot may be required for changes to these settings to take effect</value>
   </data>
+  <data name="FileExplorerPreview_PreviewHandlerOutlookIncompatibility.Title" xml:space="preserve">
+    <value>Enabling the preview handlers will override other preview handlers already installed - there have been reports of incompatibility between Outlook and the PDF Preview Handler.</value>
+    <comment>Outlook is the name of a Microsoft product</comment>
+  </data>
+  <data name="FileExplorerPreview_ThumbnailsMightNotAppearOnRemoteFolders.Title" xml:space="preserve">
+    <value>Thumbnails might not appear on paths managed by cloud storage solutions like OneDrive, since these solutions may get their thumbnails from the cloud instead of generating them locally.</value>
+    <comment>OneDrive is the name of a Microsoft product</comment>
+  </data>
   <data name="FancyZones_ExcludeApps_TextBoxControl.PlaceholderText" xml:space="preserve">
     <value>Example: outlook.exe</value>
     <comment>Don't translate outlook.exe</comment>
@@ -1016,7 +1060,7 @@ Made with 💗 by Microsoft and the PowerToys community.</value>
   <data name="ImageResizer_FilenameFormatPlaceholder.PlaceholderText" xml:space="preserve">
     <value>Example: %1 (%2)</value>
   </data>
-  <data name="ImageResizer_FilenameParameters.AutomationProperties.Name" xml:space="preserve">
+  <data name="ImageResizer_FilenameParameters.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Filename parameters</value>
   </data>
   <data name="Radio_Theme_Dark.Content" xml:space="preserve">
@@ -1122,10 +1166,10 @@ Made with 💗 by Microsoft and the PowerToys community.</value>
     <value>Small</value>
     <comment>The size of the image</comment>
   </data>
-  <data name="FancyZones_MoveWindowBasedOnRelativePosition_Accessible.AutomationProperties.Name" xml:space="preserve">
+  <data name="FancyZones_MoveWindowBasedOnRelativePosition_Accessible.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Windows key + Up, down, left or right arrow key to move windows based on relative position</value>
   </data>
-  <data name="FancyZones_MoveWindowLeftRightBasedOnZoneIndex_Accessible.AutomationProperties.Name" xml:space="preserve">
+  <data name="FancyZones_MoveWindowLeftRightBasedOnZoneIndex_Accessible.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Windows key + Left or right arrow keys to move windows based on zone index</value>
   </data>
   <data name="FancyZones_MoveWindowBasedOnRelativePosition_Description.Text" xml:space="preserve">
@@ -1179,7 +1223,7 @@ Made with 💗 by Microsoft and the PowerToys community.</value>
   <data name="PowerLauncher_IncludeInGlobalResultDescription.Text" xml:space="preserve">
     <value>Show results on queries without direct activation command</value>
   </data>
-  <data name="PowerLauncher_EnablePluginToggle.AutomationProperties.Name" xml:space="preserve">
+  <data name="PowerLauncher_EnablePluginToggle.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Enable plugin</value>
   </data>
   <data name="PowerLauncher_EnablePluginToggle.OnContent" xml:space="preserve">
@@ -1232,10 +1276,10 @@ Made with 💗 by Microsoft and the PowerToys community.</value>
   <data name="Run_PluginsLoading.Text" xml:space="preserve">
     <value>Plugins are loading...</value>
   </data>
-  <data name="ColorPicker_ButtonDown.AutomationProperties.Name" xml:space="preserve">
+  <data name="ColorPicker_ButtonDown.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Move the color down</value>
   </data>
-  <data name="ColorPicker_ButtonUp.AutomationProperties.Name" xml:space="preserve">
+  <data name="ColorPicker_ButtonUp.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Move the color up</value>
   </data>
   <data name="FancyZones_FlashZonesOnQuickSwitch.Content" xml:space="preserve">
@@ -1263,7 +1307,7 @@ Made with 💗 by Microsoft and the PowerToys community.</value>
     <value>Let's get started!</value>
   </data>
   <data name="Oobe_PowerToysDescription.Text" xml:space="preserve">
-    <value>Welcome to PowerToys!  These overviews will help you quickly learn the basics of all our utilities.</value>
+    <value>Welcome to PowerToys! These overviews will help you quickly learn the basics of all our utilities.</value>
   </data>
   <data name="Oobe_GettingStarted.Text" xml:space="preserve">
     <value>Getting started</value>
@@ -1277,47 +1321,44 @@ Made with 💗 by Microsoft and the PowerToys community.</value>
   <data name="Oobe_LearnMore.Text" xml:space="preserve">
     <value>Learn more about</value>
   </data>
-  <data name="Oobe_ColorPicker_Description" xml:space="preserve">
+  <data name="Oobe_ColorPicker.Description" xml:space="preserve">
     <value>Color Picker is a system-wide color selection tool for Windows that enables you to pick colors from any currently running application and automatically copies it in a configurable format to your clipboard.</value>
   </data>
-  <data name="Oobe_FancyZones_Description" xml:space="preserve">
+  <data name="Oobe_FancyZones.Description" xml:space="preserve">
     <value>FancyZones is a window manager that makes it easy to create complex window layouts and quickly position windows into those layouts.</value>
   </data>
-  <data name="Oobe_FileExplorer_Description" xml:space="preserve">
-    <value>PowerToys introduces add-ons to the Window’s File Explorer that will currently enable Markdown files (.md), PDF files (.pdf) and SVG icons (.svg) to be viewed in the preview pane.</value>
+  <data name="Oobe_FileExplorer.Description" xml:space="preserve">
+    <value>PowerToys introduces add-ons to the Windows File Explorer that will enable files like Markdown (.md), PDF (.pdf), SVG (.svg), STL (.stl), G-code (.gcode) and developer files to be viewed in the preview pane. It introduces File Explorer thumbnail support for a number of these file types as well.</value>
   </data>
-  <data name="Oobe_ImageResizer_Description" xml:space="preserve">
+  <data name="Oobe_ImageResizer.Description" xml:space="preserve">
     <value>Image Resizer is a Windows shell extension for simple bulk image-resizing.</value>
   </data>
-  <data name="Oobe_KBM_Description" xml:space="preserve">
+  <data name="Oobe_KBM.Description" xml:space="preserve">
     <value>Keyboard Manager allows you to customize the keyboard to be more productive by remapping keys and creating your own keyboard shortcuts.</value>
   </data>
-  <data name="Oobe_PowerRename_Description" xml:space="preserve">
+  <data name="Oobe_PowerRename.Description" xml:space="preserve">
     <value>PowerRename enables you to perform simple bulk renaming, searching and replacing file names.</value>
   </data>
-  <data name="Oobe_PowerRun_Description" xml:space="preserve">
+  <data name="Oobe_Run.Description" xml:space="preserve">
     <value>PowerToys Run is a quick launcher for power users that contains some additional features without sacrificing performance.</value>
   </data>
-  <data name="Oobe_ShortcutGuide_Description" xml:space="preserve">
+  <data name="Oobe_ShortcutGuide.Description" xml:space="preserve">
     <value>Shortcut Guide presents the user with a listing of available shortcuts for the current state of the desktop.</value>
   </data>
-  <data name="Oobe_VideoConference_Description" xml:space="preserve">
+  <data name="Oobe_VideoConference.Description" xml:space="preserve">
     <value>Video Conference Mute allows users to quickly mute the microphone and turn off the camera while on a conference call with a single keystroke, regardless of what application has focus on your computer.</value>
   </data>
-  <data name="Oobe_MouseUtils_Description" xml:space="preserve">
+  <data name="Oobe_MouseUtils.Description" xml:space="preserve">
     <value>A collection of utilities to enhance your mouse.</value>
     <comment>Mouse as in the hardware peripheral</comment>
   </data>
-  <data name="Oobe_Overview_Description.Text" xml:space="preserve">
+  <data name="Oobe_Overview.Description" xml:space="preserve">
     <value>Microsoft PowerToys is a set of utilities for power users to tune and streamline their Windows experience for greater productivity.
-    
+
 Take a moment to preview the various utilities listed or view our comprehensive documentation.</value>
-  </data>
+  </data>    
   <data name="Oobe_Overview_DescriptionLinkText.Text" xml:space="preserve">
     <value>Documentation on Microsoft Docs</value>
-  </data>
-  <data name="Oobe_Overview_LatestVersionLink.Text" xml:space="preserve">
-    <value>Release notes</value>
   </data>
   <data name="ReleaseNotes.Content" xml:space="preserve">
     <value>Release notes</value>
@@ -1339,7 +1380,7 @@ Take a moment to preview the various utilities listed or view our comprehensive 
   </data>
   <data name="Oobe_FileExplorer_HowToEnable.Text" xml:space="preserve">
     <value>Open File Explorer, **select the View tab** in the File Explorer ribbon, then **select Preview Pane**. 
-From there, simply click on a Markdown file, PDF file or SVG icon in the File Explorer and observe the content on the preview pane!</value>
+From there, simply click on one of the supported files in the File Explorer and observe the content on the preview pane!</value>
   </data>
   <data name="Oobe_HowToCreateMappings.Text" xml:space="preserve">
     <value>How to create mappings</value>
@@ -1392,43 +1433,53 @@ From there, simply click on a Markdown file, PDF file or SVG icon in the File Ex
   <data name="Oobe_VideoConference_ToggleVid.Text" xml:space="preserve">
     <value>to toggle your video</value>
   </data>
-  <data name="Oobe_ColorPicker" xml:space="preserve">
+  <data name="Oobe_ColorPicker.Title" xml:space="preserve">
     <value>Color Picker</value>
     <comment>Do not localize this string</comment>
   </data>
-  <data name="Oobe_FancyZones" xml:space="preserve">
+  <data name="Oobe_FancyZones.Title" xml:space="preserve">
     <value>FancyZones</value>
     <comment>Do not localize this string</comment>
   </data>
-  <data name="Oobe_ImageResizer" xml:space="preserve">
+  <data name="Oobe_ImageResizer.Title" xml:space="preserve">
     <value>Image Resizer</value>
     <comment>Do not localize this string</comment>
   </data>
-  <data name="Oobe_KBM" xml:space="preserve">
+  <data name="Oobe_KBM.Title" xml:space="preserve">
     <value>Keyboard Manager</value>
     <comment>Do not localize this string</comment>
   </data>
-  <data name="Oobe_Overview" xml:space="preserve">
-    <value>Overview</value>
-  </data>
-  <data name="Oobe_PowerRename" xml:space="preserve">
+  <data name="Oobe_PowerRename.Title" xml:space="preserve">
     <value>PowerRename</value>
     <comment>Do not localize this string</comment>
   </data>
-  <data name="Oobe_Run" xml:space="preserve">
+  <data name="Oobe_Run.Title" xml:space="preserve">
     <value>PowerToys Run</value>
     <comment>Do not localize this string</comment>
   </data>
-  <data name="Oobe_ShortcutGuide" xml:space="preserve">
+  <data name="Oobe_ShortcutGuide.Title" xml:space="preserve">
     <value>Shortcut Guide</value>
     <comment>Do not localize this string</comment>
   </data>
-  <data name="Oobe_VideoConference" xml:space="preserve">
+  <data name="Oobe_VideoConference.Title" xml:space="preserve">
     <value>Video Conference Mute</value>
     <comment>Do not localize this string</comment>
   </data>
-  <data name="Oobe_Welcome" xml:space="preserve">
+  <data name="Oobe_Overview.Title" xml:space="preserve">
     <value>Welcome</value>
+  </data>
+  <data name="Oobe_WhatsNew.Text" xml:space="preserve">
+    <value>What's new</value>
+  </data>
+  <data name="Oobe_WhatsNew_LoadingError.Title" xml:space="preserve">
+    <value>Couldn't load the release notes.</value>
+  </data>
+	  <data name="Oobe_WhatsNew_LoadingError.Message" xml:space="preserve">
+    <value>Please check your internet connection.</value>
+  </data>
+  <data name="Oobe_WhatsNew_DetailedReleaseNotesLink.Text" xml:space="preserve">
+    <value>See more detailed release notes on GitHub</value>
+    <comment>Don't loc "GitHub", it's the name of a product</comment>
   </data>
   <data name="OOBE_Settings.Content" xml:space="preserve">
     <value>Open Settings</value>
@@ -1480,11 +1531,11 @@ From there, simply click on a Markdown file, PDF file or SVG icon in the File Ex
   <data name="Awake_TemporaryKeepAwake_Minutes.Header" xml:space="preserve">
     <value>Minutes</value>
   </data>
-  <data name="Oobe_Awake" xml:space="preserve">
+  <data name="Oobe_Awake.Title" xml:space="preserve">
     <value>Awake</value>
     <comment>Module name, do not loc</comment>
   </data>
-  <data name="Oobe_Awake_Description" xml:space="preserve">
+  <data name="Oobe_Awake.Description" xml:space="preserve">
     <value>Awake is a Windows tool designed to keep your PC awake on-demand without having to manage its power settings. This behavior can be helpful when running time-consuming tasks while ensuring that your PC does not go to sleep or turn off its screens.</value>
   </data>
   <data name="Oobe_Awake_HowToUse.Text" xml:space="preserve">
@@ -1544,10 +1595,10 @@ From there, simply click on a Markdown file, PDF file or SVG icon in the File Ex
   <data name="ImageResizer_Unit_Pixel" xml:space="preserve">
     <value>Pixels</value>
   </data>
-  <data name="EditButton.AutomationProperties.Name" xml:space="preserve">
+  <data name="EditButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Edit</value>
   </data>
-  <data name="ImageResizer_EditSize.AutomationProperties.Name" xml:space="preserve">
+  <data name="ImageResizer_EditSize.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Edit size</value>
   </data>
   <data name="No" xml:space="preserve">
@@ -1570,10 +1621,10 @@ From there, simply click on a Markdown file, PDF file or SVG icon in the File Ex
   <data name="ExcludedApps.Header" xml:space="preserve">
     <value>Excluded apps</value>
   </data>
-  <data name="Enable_ColorFormat.AutomationProperties.Name" xml:space="preserve">
+  <data name="Enable_ColorFormat.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Enable colorformat</value>
   </data>
-  <data name="More_Options_Button.AutomationProperties.Name" xml:space="preserve">
+  <data name="More_Options_Button.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>More options</value>
   </data>
   <data name="More_Options_ButtonTooltip.Text" xml:space="preserve">
@@ -1609,7 +1660,7 @@ From there, simply click on a Markdown file, PDF file or SVG icon in the File Ex
   </data>
   <data name="LearnMore_PowerPreview.Text" xml:space="preserve">
     <value>Learn more about File Explorer add-ons</value>
-    <comment>File Explorer is a product name, do not loc</comment>
+    <comment>File Explorer is a product name, localize as Windows does</comment>
   </data>
   <data name="LearnMore_PowerRename.Text" xml:space="preserve">
     <value>Learn more about PowerRename</value>
@@ -1627,11 +1678,11 @@ From there, simply click on a Markdown file, PDF file or SVG icon in the File Ex
     <value>Learn more about Video Conference Mute</value>
     <comment>Video Conference Mute is a product name, do not loc</comment>
   </data>
-  <data name="Oobe_FileExplorer" xml:space="preserve">
+  <data name="Oobe_FileExplorer.Title" xml:space="preserve">
     <value>File Explorer add-ons</value>
     <comment>Do not localize this string</comment>
   </data>
-  <data name="Oobe_MouseUtils" xml:space="preserve">
+  <data name="Oobe_MouseUtils.Title" xml:space="preserve">
     <value>Mouse utilities</value>
     <comment>Mouse as in the hardware peripheral</comment>
   </data>
@@ -1640,7 +1691,7 @@ From there, simply click on a Markdown file, PDF file or SVG icon in the File Ex
     <comment>Mouse as in the hardware peripheral</comment>
   </data>
   <data name="Oobe_MouseUtils_FindMyMouse_Description.Text" xml:space="preserve">
-    <value>Press the left Ctrl key twice to focus the mouse pointer.</value>
+    <value>Shake the mouse or press the left Ctrl key twice to focus the mouse pointer.</value>
     <comment>Mouse as in the hardware peripheral. Key as in a keyboard key</comment>
   </data>
   <data name="Oobe_MouseUtils_MouseHighlighter.Text" xml:space="preserve">
@@ -1651,13 +1702,21 @@ From there, simply click on a Markdown file, PDF file or SVG icon in the File Ex
     <value>Use a keyboard shortcut highlight left and right mouse clicks.</value>
     <comment>Mouse as in the hardware peripheral.</comment>
   </data>
+  <data name="Oobe_MouseUtils_MousePointerCrosshairs.Text" xml:space="preserve">
+    <value>Mouse Pointer Crosshairs</value>
+    <comment>Mouse as in the hardware peripheral.</comment>
+  </data>
+  <data name="Oobe_MouseUtils_MousePointerCrosshairs_Description.Text" xml:space="preserve">
+    <value>Draw crosshairs centered around the mouse pointer.</value>
+    <comment>Mouse as in the hardware peripheral.</comment>
+  </data>
   <data name="Launch_Run.Content" xml:space="preserve">
     <value>Launch PowerToys Run</value>
   </data>
   <data name="Launch_ShortcutGuide.Content" xml:space="preserve">
     <value>Launch Shortcut Guide</value>
   </data>
-  <data name="ColorPicker_ColorFormat_ToggleSwitch.AutomationProperties.Name" xml:space="preserve">
+  <data name="ColorPicker_ColorFormat_ToggleSwitch.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Show format in editor</value>
   </data>
   <data name="GeneralPage_Documentation.Text" xml:space="preserve">
@@ -1666,29 +1725,35 @@ From there, simply click on a Markdown file, PDF file or SVG icon in the File Ex
   <data name="PowerLauncher_SearchList.PlaceholderText" xml:space="preserve">
     <value>Search this list</value>
   </data>
-  <data name="PowerLauncher_SearchList.AutomationProperties.Name" xml:space="preserve">
+  <data name="PowerLauncher_SearchList.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Search this list</value>
   </data>
   <data name="Awake.SecondaryLinksHeader" xml:space="preserve">
     <value>Attribution</value>
+    <comment>giving credit to the projects this utility was based on</comment>
   </data>
   <data name="ColorPicker.SecondaryLinksHeader" xml:space="preserve">
     <value>Attribution</value>
+    <comment>giving credit to the projects this utility was based on</comment>
   </data>
   <data name="General.SecondaryLinksHeader" xml:space="preserve">
     <value>Related information</value>
   </data>
   <data name="ImageResizer.SecondaryLinksHeader" xml:space="preserve">
     <value>Attribution</value>
+    <comment>giving credit to the projects this utility was based on</comment>
   </data>
   <data name="MouseUtils.SecondaryLinksHeader" xml:space="preserve">
     <value>Attribution</value>
+    <comment>giving credit to the projects this utility was based on</comment>
   </data>
   <data name="PowerLauncher.SecondaryLinksHeader" xml:space="preserve">
     <value>Attribution</value>
+    <comment>giving credit to the projects this utility was based on</comment>
   </data>
   <data name="PowerRename.SecondaryLinksHeader" xml:space="preserve">
     <value>Attribution</value>
+    <comment>giving credit to the projects this utility was based on</comment>
   </data>
   <data name="EditTooltip.Text" xml:space="preserve">
     <value>Edit</value>
@@ -1735,12 +1800,32 @@ From there, simply click on a Markdown file, PDF file or SVG icon in the File Ex
     <comment>Refers to the utility name</comment>
   </data>
   <data name="MouseUtils_FindMyMouse.Description" xml:space="preserve">
-    <value>Find My Mouse highlights the position of the cursor when pressing the left Ctrl key twice.</value>
+    <value>Find My Mouse highlights the position of the cursor when shaking the mouse or pressing the left Ctrl key twice.</value>
     <comment>"Ctrl" is a keyboard key. "Find My Mouse" is the name of the utility</comment>
   </data>
   <data name="MouseUtils_Enable_FindMyMouse.Header" xml:space="preserve">
     <value>Enable Find My Mouse</value>
     <comment>"Find My Mouse" is the name of the utility.</comment>
+  </data>
+  <data name="MouseUtils_FindMyMouse_ActivationMethod.Header" xml:space="preserve">
+    <value>Activation method</value>
+  </data>
+  <data name="MouseUtils_FindMyMouse_ActivationDoubleControlPress.Content" xml:space="preserve">
+    <value>Press Left Control twice</value>
+    <comment>Left control is the physical key on the keyboard.</comment>
+  </data>
+  <data name="MouseUtils_FindMyMouse_ActivationShakeMouse.Content" xml:space="preserve">
+    <value>Shake mouse</value>
+    <comment>Mouse is the hardware peripheral.</comment>
+  </data>
+  <data name="MouseUtils_FindMyMouse_ExcludedApps.Description" xml:space="preserve">
+    <value>Prevents module activation when an excluded application is the foreground application</value>
+  </data>
+  <data name="MouseUtils_FindMyMouse_ExcludedApps.Header" xml:space="preserve">
+    <value>Excluded apps</value>
+  </data>
+  <data name="MouseUtils_FindMyMouse_ExcludedApps_TextBoxControl.PlaceholderText" xml:space="preserve">
+    <value>Example: outlook.exe</value>
   </data>
   <data name="MouseUtils_Prevent_Activation_On_Game_Mode.Content" xml:space="preserve">
     <value>Do not activate when Game Mode is on</value>
@@ -1757,7 +1842,7 @@ From there, simply click on a Markdown file, PDF file or SVG icon in the File Ex
   </data>
   <data name="MouseUtils_FindMyMouse_SpotlightRadius.Header" xml:space="preserve">
     <value>Spotlight radius (px)</value>
-	<comment>px = pixels</comment>
+    <comment>px = pixels</comment>
   </data>
   <data name="MouseUtils_FindMyMouse_SpotlightInitialZoom.Header" xml:space="preserve">
     <value>Spotlight initial zoom</value>
@@ -1767,11 +1852,17 @@ From there, simply click on a Markdown file, PDF file or SVG icon in the File Ex
   </data>
   <data name="MouseUtils_FindMyMouse_AnimationDurationMs.Header" xml:space="preserve">
     <value>Animation duration (ms)</value>
-	<comment>ms = milliseconds</comment>
+    <comment>ms = milliseconds</comment>
   </data>
   <data name="MouseUtils_FindMyMouse_AnimationDurationMs.Description" xml:space="preserve">
     <value>Time before the spotlight appears (ms)</value>
-	<comment>ms = milliseconds</comment>
+    <comment>ms = milliseconds</comment>
+  </data>
+  <data name="MouseUtils_FindMyMouse_ShakingMinimumDistance.Header" xml:space="preserve">
+    <value>Shake minimum distance</value>
+  </data>
+  <data name="MouseUtils_FindMyMouse_ShakingMinimumDistance.Description" xml:space="preserve">
+    <value>The minimum distance for mouse shaking activation, for adjusting sensitivity</value>
   </data>
   <data name="MouseUtils_MouseHighlighter.Header" xml:space="preserve">
     <value>Mouse Highlighter</value>
@@ -1803,23 +1894,62 @@ From there, simply click on a Markdown file, PDF file or SVG icon in the File Ex
   </data>
   <data name="MouseUtils_MouseHighlighter_HighlightRadius.Header" xml:space="preserve">
     <value>Radius (px)</value>
-	<comment>px = pixels</comment>  
+    <comment>px = pixels</comment>
   </data>
   <data name="MouseUtils_MouseHighlighter_FadeDelayMs.Header" xml:space="preserve">
     <value>Fade delay (ms)</value>
-	<comment>ms = milliseconds</comment>
+    <comment>ms = milliseconds</comment>
   </data>
   <data name="MouseUtils_MouseHighlighter_FadeDelayMs.Description" xml:space="preserve">
-    <value>Time before a highlight appears (ms)</value>
-	<comment>ms = milliseconds</comment>
+    <value>Time before the highlight begins to fade (ms)</value>
+    <comment>ms = milliseconds</comment>
   </data>
   <data name="MouseUtils_MouseHighlighter_FadeDurationMs.Header" xml:space="preserve">
     <value>Fade duration (ms)</value>
-	<comment>ms = milliseconds</comment>
+    <comment>ms = milliseconds</comment>
   </data>
   <data name="MouseUtils_MouseHighlighter_FadeDurationMs.Description" xml:space="preserve">
     <value>Duration of the disappear animation (ms)</value>
-	<comment>ms = milliseconds</comment>
+    <comment>ms = milliseconds</comment>
+  </data>
+  <data name="MouseUtils_MousePointerCrosshairs.Header" xml:space="preserve">
+    <value>Mouse Pointer Crosshairs</value>
+    <comment>Refers to the utility name</comment>
+  </data>
+  <data name="MouseUtils_MousePointerCrosshairs.Description" xml:space="preserve">
+    <value>Mouse Pointer Crosshairs draws crosshairs centered on the mouse pointer.</value>
+    <comment>"Mouse Pointer Crosshairs" is the name of the utility. Mouse is the hardware mouse.</comment>
+  </data>
+  <data name="MouseUtils_Enable_MousePointerCrosshairs.Header" xml:space="preserve">
+    <value>Enable Mouse Pointer Crosshairs</value>
+    <comment>"Mouse Pointer Crosshairs" is the name of the utility.</comment>
+  </data>
+  <data name="MouseUtils_MousePointerCrosshairs_ActivationShortcut.Header" xml:space="preserve">
+    <value>Activation shortcut</value>
+  </data>
+  <data name="MouseUtils_MousePointerCrosshairs_ActivationShortcut.Description" xml:space="preserve">
+    <value>Customize the shortcut to show/hide the crosshairs</value>
+  </data>
+  <data name="MouseUtils_MousePointerCrosshairs_CrosshairsColor.Header" xml:space="preserve">
+    <value>Crosshairs color</value>
+  </data>
+  <data name="MouseUtils_MousePointerCrosshairs_CrosshairsOpacity.Header" xml:space="preserve">
+    <value>Crosshairs opacity (%)</value>
+  </data>
+  <data name="MouseUtils_MousePointerCrosshairs_CrosshairsRadius.Header" xml:space="preserve">
+    <value>Crosshairs center radius (px)</value>
+    <comment>px = pixels</comment>
+  </data>
+  <data name="MouseUtils_MousePointerCrosshairs_CrosshairsThickness.Header" xml:space="preserve">
+    <value>Crosshairs thickness (px)</value>
+    <comment>px = pixels</comment>
+  </data>
+  <data name="MouseUtils_MousePointerCrosshairs_CrosshairsBorderColor.Header" xml:space="preserve">
+    <value>Crosshairs border color</value>
+  </data>
+  <data name="MouseUtils_MousePointerCrosshairs_CrosshairsBorderSize.Header" xml:space="preserve">
+    <value>Crosshairs border size (px)</value>
+    <comment>px = pixels</comment>
   </data>
   <data name="FancyZones_Radio_Custom_Colors.Content" xml:space="preserve">
     <value>Custom colors</value>
@@ -1839,19 +1969,19 @@ From there, simply click on a Markdown file, PDF file or SVG icon in the File Ex
   <data name="VideoConference_RunAsAdminRequired.Title" xml:space="preserve">
     <value>You need to run as administrator to modify these settings.</value>
   </data>
-  <data name="FileExplorerPreview_ToggleSwitch_GCODE_Thumbnail.Header" xml:space="preserve">
-    <value>Enable G-code (.gcode) thumbnails</value>
-    <comment>Do you want this feature on / off</comment>
+  <data name="FileExplorerPreview_ToggleSwitch_Thumbnail_GCODE.Header" xml:space="preserve">
+    <value>Geometric Code</value>
+    <comment>File type, do not translate</comment>
   </data>
-  <data name="FileExplorerPreview_ToggleSwitch_GCODE_Thumbnail.Description" xml:space="preserve">
-    <value>Only .gcode files with embedded thumbnails are supported</value>
-  </data>
-  <data name="FileExplorerPreview_ToggleSwitch_Preview_GCODE.Description" xml:space="preserve">
+  <data name="FileExplorerPreview_ToggleSwitch_Thumbnail_GCODE.Description" xml:space="preserve">
     <value>Only .gcode files with embedded thumbnails are supported</value>
   </data>
   <data name="FileExplorerPreview_ToggleSwitch_Preview_GCODE.Header" xml:space="preserve">
-    <value>Enable G-code (.gcode) preview</value>
-    <comment>Do you want this feature on / off</comment>
+    <value>Geometric Code</value>
+    <comment>File type, do not translate</comment>
+    </data>
+  <data name="FileExplorerPreview_ToggleSwitch_Preview_GCODE.Description" xml:space="preserve">
+    <value>Only .gcode files with embedded thumbnails are supported</value>
   </data>
   <data name="FancyZones_NumberColor.Header" xml:space="preserve">
     <value>Number color</value>
@@ -1869,11 +1999,11 @@ From there, simply click on a Markdown file, PDF file or SVG icon in the File Ex
   </data>
   <data name="AlwaysOnTop.ModuleDescription" xml:space="preserve">
     <value>Always On Top is a quick and easy way to pin windows on top.</value>
-      <comment>"Always On Top" is the name of the utility</comment>
+    <comment>"Always On Top" is the name of the utility</comment>
   </data>
   <data name="AlwaysOnTop.ModuleTitle" xml:space="preserve">
     <value>Always On Top </value>
-      <comment>"Always On Top" is the name of the utility</comment>
+    <comment>"Always On Top" is the name of the utility</comment>
   </data>
   <data name="AlwaysOnTop_Activation_GroupSettings.Header" xml:space="preserve">
     <value>Activation</value>
@@ -1902,48 +2032,83 @@ From there, simply click on a Markdown file, PDF file or SVG icon in the File Ex
     <comment>px = pixels</comment>
   </data>
   <data name="AlwaysOnTop_Behavior_GroupSettings.Header" xml:space="preserve">
-   <value>Appearance &amp; behavior</value>
+    <value>Appearance &amp; behavior</value>
   </data>
   <data name="Shell_AlwaysOnTop.Content" xml:space="preserve">
     <value>Always On Top</value>
-      <comment>"Always On Top" is the name of the utility</comment>
+    <comment>"Always On Top" is the name of the utility</comment>
   </data>
   <data name="AlwaysOnTop_GameMode.Content" xml:space="preserve">
     <value>Do not activate when Game Mode is on</value>
-	  <comment>Game Mode is a Windows feature</comment>
+    <comment>Game Mode is a Windows feature</comment>
   </data>
-	  <data name="AlwaysOnTop_SoundTitle.Header" xml:space="preserve">
+  <data name="AlwaysOnTop_SoundTitle.Header" xml:space="preserve">
     <value>Sound</value>
   </data>
   <data name="AlwaysOnTop_Sound.Content" xml:space="preserve">
     <value>Play a sound when pinning a window</value>
   </data>
-	<data name="AlwaysOnTop_Behavior.Header" xml:space="preserve">
+  <data name="AlwaysOnTop_Behavior.Header" xml:space="preserve">
     <value>Behavior</value>
   </data>
-	<data name="LearnMore_AlwaysOnTop.Text" xml:space="preserve">
+  <data name="LearnMore_AlwaysOnTop.Text" xml:space="preserve">
     <value>Learn more about Always On Top</value>
-	    <comment>"Always On Top" is the name of the utility</comment>
+    <comment>"Always On Top" is the name of the utility</comment>
   </data>
-	<data name="AlwaysOnTop_ActivationShortcut.Header" xml:space="preserve">
+  <data name="AlwaysOnTop_ActivationShortcut.Header" xml:space="preserve">
     <value>Activation shortcut</value>
   </data>
-	<data name="AlwaysOnTop_ActivationShortcut.Description" xml:space="preserve">
+  <data name="AlwaysOnTop_ActivationShortcut.Description" xml:space="preserve">
     <value>Customize the shortcut to pin or unpin an app window</value>
     <comment>"Always On Top" is the name of the utility</comment>
   </data>
-  <data name="Oobe_AlwaysOnTop" xml:space="preserve">
+  <data name="Oobe_AlwaysOnTop.Title" xml:space="preserve">
     <value>Always On Top</value>
-      <comment>"Always On Top" is the name of the utility</comment>
+    <comment>"Always On Top" is the name of the utility</comment>
   </data>
-  <data name="Oobe_AlwaysOnTop_Description" xml:space="preserve">
+  <data name="Oobe_AlwaysOnTop.Description" xml:space="preserve">
     <value>Always On Top improves your multitasking workflow by pinning an application window so it's always in front - even when focus changes to another window after that.</value>
-      <comment>"Always On Top" is the name of the utility</comment>
+    <comment>"Always On Top" is the name of the utility</comment>
   </data>
   <data name="Oobe_AlwaysOnTop_HowToUse.Text" xml:space="preserve">
     <value>to pin or unpin the selected window so it's always on top of all other windows.</value>
   </data>
   <data name="Oobe_AlwaysOnTop_TipsAndTricks.Text" xml:space="preserve">
     <value>You can tweak the visual outline of the pinned windows in PowerToys settings.</value>
+  </data>
+  <data name="AlwaysOnTop_FrameColor_Mode.Header" xml:space="preserve">
+    <value>Color mode</value>
+  </data>
+  <data name="AlwaysOnTop_Radio_Custom_Color.Content" xml:space="preserve">
+    <value>Custom color</value>
+  </data>
+  <data name="AlwaysOnTop_Radio_Windows_Default.Content" xml:space="preserve">
+    <value>Windows default</value>
+  </data>
+  <data name="PowerPreviewPage.SecondaryLinksHeader" xml:space="preserve">
+    <value>Attribution</value>
+    <comment>giving credit to the projects this utility was based on</comment>
+  </data>
+  <data name="FileExplorerPreview_ToggleSwitch_Monaco_Wrap_Text.Content" xml:space="preserve">
+    <value>Wrap text</value>
+    <comment>Feature on or off</comment>
+  </data>
+  <data name="FancyZones_AllowPopupWindowSnap.Description" xml:space="preserve">
+    <value>This setting can affect all popup windows including notifications</value>
+  </data>
+  <data name="FancyZones_AllowPopupWindowSnap.Header" xml:space="preserve">
+    <value>Allow popup windows snapping</value>
+  </data>
+  <data name="FancyZones_AllowChildWindowSnap.Content" xml:space="preserve">
+    <value>Allow child windows snapping</value>
+  </data>
+  <data name="Shell_WhatsNew.Content" xml:space="preserve">
+    <value>What's new</value>
+  </data>
+  <data name="FancyZones_DisableRoundCornersOnWindowSnap.Description" xml:space="preserve">
+    <value>Works on Windows 11 </value>
+  </data>
+  <data name="FancyZones_DisableRoundCornersOnWindowSnap.Header" xml:space="preserve">
+    <value>Disable round corners when window is snapped</value>
   </data>
 </root>

@@ -59,7 +59,7 @@ namespace Microsoft.Plugin.Program.UnitTests.Programs
             Name = "x64 Native Tools Command Prompt for VS 2019",
             ExecutableName = "cmd.exe",
             FullPath = "c:\\windows\\system32\\cmd.exe",
-            Arguments = @"/k ""C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat""",
+            Arguments = @"/k ""C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat""",
             LnkResolvedPath = "c:\\programdata\\microsoft\\windows\\start menu\\programs\\visual studio 2019\\visual studio tools\\vc\\x64 native tools command prompt for vs 2019.lnk",
             AppType = Win32Program.ApplicationType.Win32Application,
         };
@@ -466,10 +466,11 @@ namespace Microsoft.Plugin.Program.UnitTests.Programs
             List<ContextMenuResult> contextMenuResults = _pinnedWebpage.ContextMenus(string.Empty, mock.Object);
 
             // Assert
-            Assert.AreEqual(3, contextMenuResults.Count);
+            Assert.AreEqual(4, contextMenuResults.Count);
             Assert.AreEqual(Properties.Resources.wox_plugin_program_run_as_administrator, contextMenuResults[0].Title);
-            Assert.AreEqual(Properties.Resources.wox_plugin_program_open_containing_folder, contextMenuResults[1].Title);
-            Assert.AreEqual(Properties.Resources.wox_plugin_program_open_in_console, contextMenuResults[2].Title);
+            Assert.AreEqual(Properties.Resources.wox_plugin_program_run_as_user, contextMenuResults[1].Title);
+            Assert.AreEqual(Properties.Resources.wox_plugin_program_open_containing_folder, contextMenuResults[2].Title);
+            Assert.AreEqual(Properties.Resources.wox_plugin_program_open_in_console, contextMenuResults[3].Title);
         }
 
         [TestMethod]
@@ -497,10 +498,11 @@ namespace Microsoft.Plugin.Program.UnitTests.Programs
             List<ContextMenuResult> contextMenuResults = _chrome.ContextMenus(string.Empty, mock.Object);
 
             // Assert
-            Assert.AreEqual(3, contextMenuResults.Count);
+            Assert.AreEqual(4, contextMenuResults.Count);
             Assert.AreEqual(Properties.Resources.wox_plugin_program_run_as_administrator, contextMenuResults[0].Title);
-            Assert.AreEqual(Properties.Resources.wox_plugin_program_open_containing_folder, contextMenuResults[1].Title);
-            Assert.AreEqual(Properties.Resources.wox_plugin_program_open_in_console, contextMenuResults[2].Title);
+            Assert.AreEqual(Properties.Resources.wox_plugin_program_run_as_user, contextMenuResults[1].Title);
+            Assert.AreEqual(Properties.Resources.wox_plugin_program_open_containing_folder, contextMenuResults[2].Title);
+            Assert.AreEqual(Properties.Resources.wox_plugin_program_open_in_console, contextMenuResults[3].Title);
         }
 
         [TestMethod]
@@ -513,10 +515,11 @@ namespace Microsoft.Plugin.Program.UnitTests.Programs
             List<ContextMenuResult> contextMenuResults = _cmdRunCommand.ContextMenus(string.Empty, mock.Object);
 
             // Assert
-            Assert.AreEqual(3, contextMenuResults.Count);
+            Assert.AreEqual(4, contextMenuResults.Count);
             Assert.AreEqual(Properties.Resources.wox_plugin_program_run_as_administrator, contextMenuResults[0].Title);
-            Assert.AreEqual(Properties.Resources.wox_plugin_program_open_containing_folder, contextMenuResults[1].Title);
-            Assert.AreEqual(Properties.Resources.wox_plugin_program_open_in_console, contextMenuResults[2].Title);
+            Assert.AreEqual(Properties.Resources.wox_plugin_program_run_as_user, contextMenuResults[1].Title);
+            Assert.AreEqual(Properties.Resources.wox_plugin_program_open_containing_folder, contextMenuResults[2].Title);
+            Assert.AreEqual(Properties.Resources.wox_plugin_program_open_in_console, contextMenuResults[3].Title);
         }
 
         [TestMethod]
@@ -529,10 +532,11 @@ namespace Microsoft.Plugin.Program.UnitTests.Programs
             List<ContextMenuResult> contextMenuResults = _dummyAppRefApp.ContextMenus(string.Empty, mock.Object);
 
             // Assert
-            Assert.AreEqual(3, contextMenuResults.Count);
+            Assert.AreEqual(4, contextMenuResults.Count);
             Assert.AreEqual(Properties.Resources.wox_plugin_program_run_as_administrator, contextMenuResults[0].Title);
-            Assert.AreEqual(Properties.Resources.wox_plugin_program_open_containing_folder, contextMenuResults[1].Title);
-            Assert.AreEqual(Properties.Resources.wox_plugin_program_open_in_console, contextMenuResults[2].Title);
+            Assert.AreEqual(Properties.Resources.wox_plugin_program_run_as_user, contextMenuResults[1].Title);
+            Assert.AreEqual(Properties.Resources.wox_plugin_program_open_containing_folder, contextMenuResults[2].Title);
+            Assert.AreEqual(Properties.Resources.wox_plugin_program_open_in_console, contextMenuResults[3].Title);
         }
 
         [TestMethod]
@@ -545,10 +549,11 @@ namespace Microsoft.Plugin.Program.UnitTests.Programs
             List<ContextMenuResult> contextMenuResults = _dummyShortcutApp.ContextMenus(string.Empty, mock.Object);
 
             // Assert
-            Assert.AreEqual(3, contextMenuResults.Count);
+            Assert.AreEqual(4, contextMenuResults.Count);
             Assert.AreEqual(Properties.Resources.wox_plugin_program_run_as_administrator, contextMenuResults[0].Title);
-            Assert.AreEqual(Properties.Resources.wox_plugin_program_open_containing_folder, contextMenuResults[1].Title);
-            Assert.AreEqual(Properties.Resources.wox_plugin_program_open_in_console, contextMenuResults[2].Title);
+            Assert.AreEqual(Properties.Resources.wox_plugin_program_run_as_user, contextMenuResults[1].Title);
+            Assert.AreEqual(Properties.Resources.wox_plugin_program_open_containing_folder, contextMenuResults[2].Title);
+            Assert.AreEqual(Properties.Resources.wox_plugin_program_open_in_console, contextMenuResults[3].Title);
         }
 
         [TestMethod]

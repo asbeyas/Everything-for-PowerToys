@@ -46,7 +46,7 @@ namespace PowerLauncher
         [STAThread]
         public static void Main()
         {
-            Log.Info($"Starting PowerToys Run with PID={Process.GetCurrentProcess().Id}", typeof(App));
+            Log.Info($"Starting PowerToys Run with PID={Environment.ProcessId}", typeof(App));
             int powerToysPid = GetPowerToysPId();
             if (powerToysPid != 0)
             {
@@ -272,7 +272,9 @@ namespace PowerLauncher
 
                     API?.SaveAppAllSettings();
                     PluginManager.Dispose();
-                    _mainWindow?.Dispose();
+
+                    // Dispose needs to be called on the main Windows thread, since some resources owned by the thread need to be disposed.
+                    _mainWindow?.Dispatcher.Invoke(Dispose);
                     API?.Dispose();
                     _mainVM?.Dispose();
                     _themeManager?.Dispose();

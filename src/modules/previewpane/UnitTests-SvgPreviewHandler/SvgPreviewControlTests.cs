@@ -7,18 +7,23 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using Microsoft.PowerToys.PreviewHandler.Svg;
 using Microsoft.PowerToys.STATestExtension;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Web.WebView2.WinForms;
 using Moq;
-using PreviewHandlerCommon;
 
 namespace SvgPreviewHandlerUnitTests
 {
     [STATestClass]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2201:Do not raise reserved exception types", Justification = "new Exception() is fine in test projects.")]
     public class SvgPreviewControlTests
     {
+        private static readonly int ThreeSecondsInMilliseconds = 3000;
+        private static readonly int SleepTimeInMilliseconds = 200;
+
         [TestMethod]
         public void SvgPreviewControlShouldAddExtendedBrowserControlWhenDoPreviewCalled()
         {
@@ -28,14 +33,22 @@ namespace SvgPreviewHandlerUnitTests
                 // Act
                 svgPreviewControl.DoPreview(GetMockStream("<svg></svg>"));
 
+                int beforeTick = Environment.TickCount;
+
+                while (svgPreviewControl.Controls.Count == 0 && Environment.TickCount < beforeTick + ThreeSecondsInMilliseconds)
+                {
+                    Application.DoEvents();
+                    Thread.Sleep(SleepTimeInMilliseconds);
+                }
+
                 // Assert
                 Assert.AreEqual(1, svgPreviewControl.Controls.Count);
-                Assert.IsInstanceOfType(svgPreviewControl.Controls[0], typeof(WebBrowserExt));
+                Assert.IsInstanceOfType(svgPreviewControl.Controls[0], typeof(WebView2));
             }
         }
 
         [TestMethod]
-        public void SvgPreviewControlShouldSetDocumentStreamWhenDoPreviewCalled()
+        public void SvgPreviewControlShouldFillDockForWebView2WhenDoPreviewCalled()
         {
             // Arrange
             using (var svgPreviewControl = new SvgPreviewControl())
@@ -43,80 +56,16 @@ namespace SvgPreviewHandlerUnitTests
                 // Act
                 svgPreviewControl.DoPreview(GetMockStream("<svg></svg>"));
 
-                // Assert
-                Assert.IsNotNull(((WebBrowser)svgPreviewControl.Controls[0]).DocumentStream);
-            }
-        }
+                int beforeTick = Environment.TickCount;
 
-        [TestMethod]
-        public void SvgPreviewControlShouldDisableWebBrowserContextMenuWhenDoPreviewCalled()
-        {
-            // Arrange
-            using (var svgPreviewControl = new SvgPreviewControl())
-            {
-                // Act
-                svgPreviewControl.DoPreview(GetMockStream("<svg></svg>"));
+                while (svgPreviewControl.Controls.Count == 0 && Environment.TickCount < beforeTick + ThreeSecondsInMilliseconds)
+                {
+                    Application.DoEvents();
+                    Thread.Sleep(SleepTimeInMilliseconds);
+                }
 
                 // Assert
-                Assert.AreEqual(false, ((WebBrowser)svgPreviewControl.Controls[0]).IsWebBrowserContextMenuEnabled);
-            }
-        }
-
-        [TestMethod]
-        public void SvgPreviewControlShouldFillDockForWebBrowserWhenDoPreviewCalled()
-        {
-            // Arrange
-            using (var svgPreviewControl = new SvgPreviewControl())
-            {
-                // Act
-                svgPreviewControl.DoPreview(GetMockStream("<svg></svg>"));
-
-                // Assert
-                Assert.AreEqual(DockStyle.Fill, ((WebBrowser)svgPreviewControl.Controls[0]).Dock);
-            }
-        }
-
-        [TestMethod]
-        public void SvgPreviewControlShouldSetScriptErrorsSuppressedPropertyWhenDoPreviewCalled()
-        {
-            // Arrange
-            using (var svgPreviewControl = new SvgPreviewControl())
-            {
-                // Act
-                svgPreviewControl.DoPreview(GetMockStream("<svg></svg>"));
-
-                // Assert
-                Assert.AreEqual(true, ((WebBrowser)svgPreviewControl.Controls[0]).ScriptErrorsSuppressed);
-            }
-        }
-
-        // ToDo: fix unit test
-        [Ignore]
-        [TestMethod]
-        public void SvgPreviewControlShouldSetScrollBarsEnabledPropertyWhenDoPreviewCalled()
-        {
-            // Arrange
-            using (var svgPreviewControl = new SvgPreviewControl())
-            {
-                // Act
-                svgPreviewControl.DoPreview(GetMockStream("<svg></svg>"));
-
-                // Assert
-                Assert.AreEqual(true, ((WebBrowser)svgPreviewControl.Controls[0]).ScrollBarsEnabled);
-            }
-        }
-
-        [TestMethod]
-        public void SvgPreviewControlShouldDisableAllowNavigationWhenDoPreviewCalled()
-        {
-            // Arrange
-            using (var svgPreviewControl = new SvgPreviewControl())
-            {
-                // Act
-                svgPreviewControl.DoPreview(GetMockStream("<svg></svg>"));
-
-                // Assert
-                Assert.AreEqual(false, ((WebBrowser)svgPreviewControl.Controls[0]).AllowNavigation);
+                Assert.AreEqual(DockStyle.Fill, ((WebView2)svgPreviewControl.Controls[0]).Dock);
             }
         }
 
@@ -133,6 +82,15 @@ namespace SvgPreviewHandlerUnitTests
 
                 // Act
                 svgPreviewControl.DoPreview(mockStream.Object);
+
+                int beforeTick = Environment.TickCount;
+
+                while (svgPreviewControl.Controls.Count == 0 && Environment.TickCount < beforeTick + ThreeSecondsInMilliseconds)
+                {
+                    Application.DoEvents();
+                    Thread.Sleep(SleepTimeInMilliseconds);
+                }
+
                 var textBox = svgPreviewControl.Controls[0] as RichTextBox;
 
                 // Assert
@@ -158,6 +116,15 @@ namespace SvgPreviewHandlerUnitTests
                     .Setup(x => x.Read(It.IsAny<byte[]>(), It.IsAny<int>(), It.IsAny<IntPtr>()))
                     .Throws(new Exception());
                 svgPreviewControl.DoPreview(mockStream.Object);
+
+                int beforeTick = Environment.TickCount;
+
+                while (svgPreviewControl.Controls.Count == 0 && Environment.TickCount < beforeTick + ThreeSecondsInMilliseconds)
+                {
+                    Application.DoEvents();
+                    Thread.Sleep(SleepTimeInMilliseconds);
+                }
+
                 var textBox = svgPreviewControl.Controls[0] as RichTextBox;
                 var incrementParentControlWidth = 5;
                 var initialParentWidth = svgPreviewControl.Width;
@@ -187,9 +154,17 @@ namespace SvgPreviewHandlerUnitTests
                 // Act
                 svgPreviewControl.DoPreview(GetMockStream(svgBuilder.ToString()));
 
+                int beforeTick = Environment.TickCount;
+
+                while (svgPreviewControl.Controls.Count < 2 && Environment.TickCount < beforeTick + ThreeSecondsInMilliseconds)
+                {
+                    Application.DoEvents();
+                    Thread.Sleep(SleepTimeInMilliseconds);
+                }
+
                 // Assert
                 Assert.IsInstanceOfType(svgPreviewControl.Controls[0], typeof(RichTextBox));
-                Assert.IsInstanceOfType(svgPreviewControl.Controls[1], typeof(WebBrowserExt));
+                Assert.IsInstanceOfType(svgPreviewControl.Controls[1], typeof(WebView2));
                 Assert.AreEqual(2, svgPreviewControl.Controls.Count);
             }
         }
@@ -209,8 +184,16 @@ namespace SvgPreviewHandlerUnitTests
                 // Act
                 svgPreviewControl.DoPreview(GetMockStream(svgBuilder.ToString()));
 
+                int beforeTick = Environment.TickCount;
+
+                while (svgPreviewControl.Controls.Count == 0 && Environment.TickCount < beforeTick + ThreeSecondsInMilliseconds)
+                {
+                    Application.DoEvents();
+                    Thread.Sleep(SleepTimeInMilliseconds);
+                }
+
                 // Assert
-                Assert.IsInstanceOfType(svgPreviewControl.Controls[0], typeof(WebBrowserExt));
+                Assert.IsInstanceOfType(svgPreviewControl.Controls[0], typeof(WebView2));
                 Assert.AreEqual(1, svgPreviewControl.Controls.Count);
             }
         }
@@ -226,6 +209,15 @@ namespace SvgPreviewHandlerUnitTests
                 svgBuilder.AppendLine("\t<script>alert(\"hello\")</script>");
                 svgBuilder.AppendLine("</svg>");
                 svgPreviewControl.DoPreview(GetMockStream(svgBuilder.ToString()));
+
+                int beforeTick = Environment.TickCount;
+
+                while (svgPreviewControl.Controls.Count == 0 && Environment.TickCount < beforeTick + ThreeSecondsInMilliseconds)
+                {
+                    Application.DoEvents();
+                    Thread.Sleep(SleepTimeInMilliseconds);
+                }
+
                 var textBox = svgPreviewControl.Controls[0] as RichTextBox;
                 var incrementParentControlWidth = 5;
                 var initialParentWidth = svgPreviewControl.Width;

@@ -4,12 +4,14 @@
 
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Microsoft.Plugin.Uri.Interfaces;
 
 namespace Microsoft.Plugin.Uri.UriHelper
 {
     public class ExtendedUriParser : IUriParser
     {
+        // When updating this method, also update the local method IsUri() in Community.PowerToys.Run.Plugin.WebSearch.Main.Query
         public bool TryParse(string input, out System.Uri result, out bool isWebUri)
         {
             if (string.IsNullOrEmpty(input))
@@ -21,10 +23,13 @@ namespace Microsoft.Plugin.Uri.UriHelper
 
             // Handling URL with only scheme, typically mailto or application uri.
             // Do nothing, return the result without urlBuilder
+            // And check if scheme match REC3986 (issue #15035)
+            const string schemeRegex = @"^([a-z][a-z0-9+\-.]*):";
             if (input.EndsWith(":", StringComparison.OrdinalIgnoreCase)
                 && !input.StartsWith("http", StringComparison.OrdinalIgnoreCase)
-                && !input.Contains("/", StringComparison.OrdinalIgnoreCase)
-                && !input.All(char.IsDigit))
+                && !input.Contains('/', StringComparison.OrdinalIgnoreCase)
+                && !input.All(char.IsDigit)
+                && Regex.IsMatch(input, schemeRegex))
             {
                 result = new System.Uri(input);
                 isWebUri = false;
@@ -55,9 +60,9 @@ namespace Microsoft.Plugin.Uri.UriHelper
                     urlBuilder.Scheme = System.Uri.UriSchemeHttp;
                     isWebUri = true;
                 }
-                else if (input.Contains(":", StringComparison.OrdinalIgnoreCase) &&
+                else if (input.Contains(':', StringComparison.OrdinalIgnoreCase) &&
                         !input.StartsWith("http", StringComparison.OrdinalIgnoreCase) &&
-                        !input.Contains("[", StringComparison.OrdinalIgnoreCase))
+                        !input.Contains('[', StringComparison.OrdinalIgnoreCase))
                 {
                     // Do nothing, leave unchanged
                     isWebUri = false;

@@ -52,22 +52,33 @@ namespace PowerLauncher
 
         private void SendSettingsTelemetry()
         {
-            Log.Info("Send Run settings telemetry", this.GetType());
-            var plugins = PluginManager.AllPlugins.ToDictionary(x => x.Metadata.Name, x => new PluginModel()
+            try
             {
-                Disabled = x.Metadata.Disabled,
-                ActionKeyword = x.Metadata.ActionKeyword,
-                IsGlobal = x.Metadata.IsGlobal,
-            });
+                Log.Info("Send Run settings telemetry", this.GetType());
+                var plugins = PluginManager.AllPlugins.ToDictionary(x => x.Metadata.Name + " " + x.Metadata.ID, x => new PluginModel()
+                {
+                    ID = x.Metadata.ID,
+                    Name = x.Metadata.Name,
+                    Disabled = x.Metadata.Disabled,
+                    ActionKeyword = x.Metadata.ActionKeyword,
+                    IsGlobal = x.Metadata.IsGlobal,
+                });
 
-            var telemetryEvent = new RunPluginsSettingsEvent(plugins);
-            PowerToysTelemetry.Log.WriteEvent(telemetryEvent);
+                var telemetryEvent = new RunPluginsSettingsEvent(plugins);
+                PowerToysTelemetry.Log.WriteEvent(telemetryEvent);
+            }
+#pragma warning disable CA1031 // Do not catch general exception types
+            catch (Exception ex)
+#pragma warning restore CA1031 // Do not catch general exception types
+            {
+                Log.Exception("Unhandled exception when trying to send PowerToys Run settings telemetry.", ex, GetType());
+            }
         }
 
         protected override void OnSourceInitialized(EventArgs e)
         {
             base.OnSourceInitialized(e);
-            WindowsInteropHelper.SetPopupStyle(this);
+            WindowsInteropHelper.SetToolWindowStyle(this);
         }
 
         private void CheckForFirstDelete(object sender, ElapsedEventArgs e)
@@ -193,6 +204,10 @@ namespace PowerLauncher
                     // Called when window is made visible by hotkey. Not called when the window is deactivated by clicking away
                     UpdatePosition();
                     BringProcessToForeground();
+
+                    // HACK: Setting focus here again fixes some focus issues, like on first run or after showing a message box.
+                    SearchBox.QueryTextBox.Focus();
+                    Keyboard.Focus(SearchBox.QueryTextBox);
 
                     if (!_viewModel.LastQuerySelected)
                     {

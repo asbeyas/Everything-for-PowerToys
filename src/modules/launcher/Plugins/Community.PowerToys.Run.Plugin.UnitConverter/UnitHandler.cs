@@ -37,7 +37,7 @@ namespace Community.PowerToys.Run.Plugin.UnitConverter
         /// <returns>Corresponding enum or null.</returns>
         private static Enum GetUnitEnum(string unit, QuantityInfo unitInfo)
         {
-            UnitInfo first = Array.Find(unitInfo.UnitInfos, info => info.Name.ToLower() == unit.ToLower());
+            UnitInfo first = Array.Find(unitInfo.UnitInfos, info => info.Name.ToLowerInvariant() == unit.ToLowerInvariant());
             if (first != null)
             {
                 return first.Value;
@@ -49,6 +49,23 @@ namespace Community.PowerToys.Run.Plugin.UnitConverter
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Rounds the value to the predefined number of significant digits.
+        /// </summary>
+        /// <param name="value">Value to be rounded</param>
+        public static double Round(double value)
+        {
+            if (value == 0.0D)
+            {
+                return 0;
+            }
+
+            var power = Math.Floor(Math.Log10(Math.Abs(value)));
+            var exponent = Math.Pow(10, power);
+            var rounded = Math.Round(value / exponent, _roundingFractionalDigits) * exponent;
+            return rounded;
         }
 
         /// <summary>
@@ -83,7 +100,7 @@ namespace Community.PowerToys.Run.Plugin.UnitConverter
 
                 if (!double.IsNaN(convertedValue))
                 {
-                    UnitConversionResult result = new UnitConversionResult(Math.Round(convertedValue, _roundingFractionalDigits), convertModel.ToUnit, quantityType);
+                    UnitConversionResult result = new UnitConversionResult(Round(convertedValue), convertModel.ToUnit, quantityType);
                     results.Add(result);
                 }
             }
